@@ -1,64 +1,43 @@
-# Dart and Flutter-specific files
+# Miscellaneous
+*.class
+*.log
+*.pyc
+*.swp
+.DS_Store
+.atom/
+.buildlog/
+.history
+.svn/
+migrate_working_dir/
+
+# IntelliJ related
+*.iml
+*.ipr
+*.iws
+.idea/
+
+# The .vscode folder contains launch configuration and tasks you configure in
+# VS Code which you may wish to be included in version control, so this line
+# is commented out by default.
+#.vscode/
+
+# Flutter/Dart/Pub related
+**/doc/api/
+**/ios/Flutter/.last_build_id
 .dart_tool/
-.packages
-build/
 .flutter-plugins
 .flutter-plugins-dependencies
+.pub-cache/
+.pub/
+/build/
 
-# If you're building an application, you may want to check-in your pubspec.lock
-pubspec.lock
+# Symbolication related
+app.*.symbols
 
-# Directory created by dartdoc
-# If you don't generate documentation locally you can remove this line.
-doc/api/
+# Obfuscation related
+app.*.map.json
 
-# dotenv environment variables file
-.env*
-
-# Avoid committing generated JavaScript files:
-*.dart.js
-*.info.json
-*.js
-*.js_
-*.js.deps
-*.js.map
-
-# iOS-specific
-ios/Pods/
-ios/.symlinks/
-ios/Flutter/Flutter.framework/
-ios/Flutter/App.framework/
-
-# Android-specific
-android/.gradle/
-android/app/build/
-
-# macOS-specific
-macos/Pods/
-macos/Flutter/ephemeral/
-
-# Windows-specific
-windows/Flutter/ephemeral/
-
-# Linux-specific
-linux/Flutter/ephemeral/
-
-# Web-specific
-web/.dart_tool/
-web/build/
-
-# IDE-specific files
-.idea/
-.vscode/
-*.iml
-
-# Temporary files
-*.log
-*.temp
-*.tmp
-
-# System files
-.DS_Store
-
-# Exclude Firebase-related files if not required
-.firebase/
+# Android Studio will place build artifacts here
+/android/app/debug
+/android/app/profile
+/android/app/release
