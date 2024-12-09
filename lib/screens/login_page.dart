@@ -9,7 +9,7 @@ class LoginPage extends StatelessWidget {
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Scaffold(
-        backgroundColor: const Color(0xFFF5F5F5),
+        backgroundColor: const Color(0xFFD4D6D9),
         body: SafeArea(
           child: Column(
             children: [
@@ -17,20 +17,22 @@ class LoginPage extends StatelessWidget {
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   child: Center(
-                    child: Column(
+                    child: SingleChildScrollView(
+                      child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          // const SizedBox(height: 20),
+                          const SizedBox(height: 20),
                           // Tabs
                           Padding(
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 32.0, vertical: 16),
                             child: Container(
                               decoration: BoxDecoration(
-                                color: Colors.grey.shade200,
+                                border:
+                                    Border.all(color: Colors.grey, width: 1.0),
                                 borderRadius: BorderRadius.circular(25.0),
                               ),
-                              padding: const EdgeInsets.all(4.0),
+                              padding: const EdgeInsets.all(6.0),
                               child: Row(
                                 children: [
                                   Expanded(
@@ -65,8 +67,7 @@ class LoginPage extends StatelessWidget {
                                     child: Container(
                                       height: 40.0,
                                       decoration: BoxDecoration(
-                                        color: Colors
-                                            .white, // Active tab background
+                                        color: Colors.white,
                                         borderRadius:
                                             BorderRadius.circular(25.0),
                                         boxShadow: [
@@ -107,6 +108,7 @@ class LoginPage extends StatelessWidget {
                           ),
                           // Login Card
                           Card(
+                            color: Colors.white,
                             elevation: 4,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12.0),
@@ -166,8 +168,8 @@ class LoginPage extends StatelessWidget {
                                   ),
                                   const SizedBox(height: 8),
                                   Row(
-                                    mainAxisAlignment: MainAxisAlignment
-                                        .spaceBetween, // Align items at two ends
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
                                       Row(
                                         children: [
@@ -214,37 +216,64 @@ class LoginPage extends StatelessWidget {
                                     ),
                                   ),
                                   const SizedBox(height: 20),
-                                  Row(
-                                    children: const [
-                                      Expanded(child: Divider()),
+                                  const Row(
+                                    children: [
+                                      Expanded(
+                                          child: Divider(
+                                        color: Colors.grey,
+                                      )),
                                       Padding(
                                         padding: EdgeInsets.symmetric(
                                             horizontal: 8.0),
                                         child: Text('أو'),
                                       ),
-                                      Expanded(child: Divider()),
+                                      Expanded(
+                                          child: Divider(
+                                        color: Colors.grey,
+                                      )),
                                     ],
                                   ),
                                   const SizedBox(height: 16),
                                   Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
-                                      IconButton(
-                                        onPressed: () {
-                                          // TODO: Google login action
-                                        },
-                                        icon: const Icon(Icons.g_mobiledata),
-                                        iconSize: 40,
-                                        color: Colors.red,
+                                      // Facebook button
+                                      Container(
+                                        width: 60,
+                                        height: 60,
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          border: Border.all(
+                                              color: Colors.grey, width: 1),
+                                          borderRadius:
+                                              BorderRadius.circular(12),
+                                        ),
+                                        child: IconButton(
+                                          onPressed: () {},
+                                          icon: const Icon(Icons.facebook),
+                                          iconSize: 35,
+                                          color: Colors.blue,
+                                        ),
                                       ),
-                                      const SizedBox(width: 16),
-                                      IconButton(
-                                        onPressed: () {
-                                          // TODO: Facebook login action
-                                        },
-                                        icon: const Icon(Icons.facebook),
-                                        iconSize: 40,
-                                        color: Colors.blue,
+                                      const SizedBox(width: 20),
+                                      // Google button
+                                      Container(
+                                        width: 60,
+                                        height: 60,
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          border: Border.all(
+                                              color: Colors.grey, width: 1.0),
+                                          borderRadius:
+                                              BorderRadius.circular(12),
+                                        ),
+                                        child: IconButton(
+                                          onPressed: () {},
+                                          icon: const Icon(Icons.g_mobiledata),
+                                          iconSize: 35,
+                                          color: Colors.red,
+                                        ),
                                       ),
                                     ],
                                   ),
@@ -252,7 +281,10 @@ class LoginPage extends StatelessWidget {
                               ),
                             ),
                           ),
-                        ]),
+                          const SizedBox(height: 20),
+                        ],
+                      ),
+                    ),
                   ),
                 ),
               ),
