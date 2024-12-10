@@ -63,12 +63,25 @@ flutter:
     - assets/fonts/Amiri-Bold.ttf
     - assets/images/logo_left.jpeg
     - assets/images/logo_right.jpeg
+    - assets/images/wave_left.jpg
+    - assets/images/wave_right.jpg
+    - assets/images/Icons/google.png
+    - assets/images/Icons/facebook.png
 
   fonts:
-    - family: Amiri
+    # - family: Amiri
+    #   fonts:
+    #     - asset: assets/fonts/Amiri-Regular.ttf
+    #     - asset: assets/fonts/Amiri-Bold.ttf
+    #       weight: 700
+    - family: Inter
       fonts:
-        - asset: assets/fonts/Amiri-Regular.ttf
-        - asset: assets/fonts/Amiri-Bold.ttf
+        - asset: assets/fonts/Inter-Light.ttf
+        - asset: assets/fonts/Inter-Light-Italic.ttf
+        - asset: assets/fonts/Inter-Regular.ttf
+        - asset: assets/fonts/Inter-Italic.ttf
+        - asset: assets/fonts/Inter-Bold.ttf
+        - asset: assets/fonts/Inter-Bold-Italic.ttf
           weight: 700
 
 

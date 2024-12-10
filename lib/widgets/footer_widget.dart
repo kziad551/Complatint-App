@@ -7,7 +7,8 @@ class FooterWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: const BoxDecoration(
-        color: Color(0xFFBC0019), // Red background for the left and right sections
+        color:
+            Color(0xFFBC0019), // Red background for the left and right sections
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(20),
           topRight: Radius.circular(20),
@@ -34,7 +35,8 @@ class FooterWidget extends StatelessWidget {
           Expanded(
             flex: 1, // Allocate 1/3 of the space
             child: Container(
-              color: const Color(0xFFDAD8D9), // Light gray background for the middle section
+              color: const Color(
+                  0xFFDAD8D9), // Light gray background for the middle section
               alignment: Alignment.center,
               child: ElevatedButton(
                 onPressed: () {
@@ -43,9 +45,11 @@ class FooterWidget extends StatelessWidget {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.white, // Button background
                   foregroundColor: Colors.black, // Button text color
-                  padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20), // Rounded button corners
+                    borderRadius:
+                        BorderRadius.circular(20), // Rounded button corners
                   ),
                 ),
                 child: const Text(

@@ -161,26 +161,30 @@ class _LoginPageState extends State<LoginPage> {
         borderRadius: BorderRadius.circular(12.0),
       ),
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 32.0),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
+            const SizedBox(height: 32),
             const Align(
               alignment: Alignment.centerRight,
               child: Text(
                 'تسجيل الدخول',
                 style: TextStyle(
-                  fontSize: 32,
+                  fontSize: 36,
                   fontWeight: FontWeight.bold,
                 ),
               ),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 32),
             const Align(
               alignment: Alignment.centerRight,
               child: Text(
                 'البريد الإلكتروني / رقم الهاتف',
-                style: TextStyle(fontSize: 16),
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
             const SizedBox(height: 8),
@@ -197,7 +201,10 @@ class _LoginPageState extends State<LoginPage> {
               alignment: Alignment.centerRight,
               child: Text(
                 'كلمة المرور',
-                style: TextStyle(fontSize: 16),
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
             const SizedBox(height: 8),
@@ -239,7 +246,7 @@ class _LoginPageState extends State<LoginPage> {
                   // TODO: Login action
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.red,
+                  backgroundColor: const Color(0xFFBA110C),
                   padding: const EdgeInsets.symmetric(vertical: 14.0),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10.0),
@@ -451,9 +458,9 @@ class _LoginPageState extends State<LoginPage> {
               ),
               child: IconButton(
                 onPressed: () {},
-                icon: const Icon(Icons.g_mobiledata),
+                icon: Image.asset('assets/images/Icons/google.png'),
                 iconSize: 35,
-                color: Colors.red,
+                color: const Color(0xFFBA110C),
               ),
             ),
           ],
