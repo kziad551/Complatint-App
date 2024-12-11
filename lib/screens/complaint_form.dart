@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'add_complaint_form.dart'; // Import the AddComplaintForm page
+import 'add_complaint_form.dart'; // Ensure this file contains the AddComplaintForm class
 
 class ComplaintForm extends StatefulWidget {
   const ComplaintForm({Key? key}) : super(key: key);
@@ -115,14 +115,22 @@ class _ComplaintFormState extends State<ComplaintForm> {
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) =>
-                                        const AddComplaintForm(),
+                                        const AddComplaintForm(
+                                          complaintTitle: 'شكوى المياه',
+                                        ),
                                   ),
                                 );
                               }
                             : null, // Disable button if no selection
                         style: ElevatedButton.styleFrom(
+<<<<<<< Updated upstream
                           backgroundColor:
                               isSelected ? const Color(0xFFBA110C) : Colors.grey, // Button color
+=======
+                          backgroundColor: isSelected
+                              ? Colors.red
+                              : Colors.grey, // Button color
+>>>>>>> Stashed changes
                           padding: const EdgeInsets.symmetric(vertical: 14.0),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10.0),
