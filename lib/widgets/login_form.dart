@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../screens/home_page.dart'; // Import HomePage
 
 class LoginForm extends StatelessWidget {
   final VoidCallback onForgotPassword;
@@ -55,7 +56,12 @@ class LoginForm extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 16),
-            _buildActionButton('تسجيل الدخول', () {}),
+            _buildActionButton('تسجيل الدخول', () {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => const HomePage()),
+              );
+            }),
           ],
         ),
       ),

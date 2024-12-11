@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../widgets/footer_widget.dart';
-import '../widgets/toggle_tabs.dart';
+import '../widgets/toggle_signup_tabs.dart';
 import '../widgets/login_form.dart';
 import '../widgets/sign_up_form.dart';
 
