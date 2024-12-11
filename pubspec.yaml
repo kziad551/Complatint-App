@@ -67,6 +67,7 @@ flutter:
     - assets/images/logo_right.jpeg
     - assets/images/wave_left.jpg
     - assets/images/wave_right.jpg
+    - assets/images/footer_waves.png
     - assets/images/Icons/google.png
     - assets/images/Icons/facebook.png
 

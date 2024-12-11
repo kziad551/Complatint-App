@@ -122,7 +122,7 @@ class _ComplaintFormState extends State<ComplaintForm> {
                             : null, // Disable button if no selection
                         style: ElevatedButton.styleFrom(
                           backgroundColor:
-                              isSelected ? Colors.red : Colors.grey, // Button color
+                              isSelected ? const Color(0xFFBA110C) : Colors.grey, // Button color
                           padding: const EdgeInsets.symmetric(vertical: 14.0),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10.0),

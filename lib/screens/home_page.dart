@@ -152,7 +152,7 @@ class _HomePageState extends State<HomePage> {
                 );
               },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.red,
+                  backgroundColor: const Color(0xFFBA110C),
                   padding: const EdgeInsets.symmetric(vertical: 14.0),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10.0),

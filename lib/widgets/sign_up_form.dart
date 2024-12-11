@@ -1,3 +1,5 @@
+import 'package:complaint_application/screens/home_page.dart';
+import 'package:complaint_application/widgets/social_media.dart';
 import 'package:flutter/material.dart';
 
 class SignUpForm extends StatelessWidget {
@@ -16,6 +18,7 @@ class SignUpForm extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
+            const SizedBox(height: 32),
             const Align(
               alignment: Alignment.centerRight,
               child: Text(
@@ -26,8 +29,9 @@ class SignUpForm extends StatelessWidget {
                 ),
               ),
             ),
-            const SizedBox(height: 20),
-            _buildInputField(label: 'البريد الإلكتروني', hint: 'البريد الإلكتروني'),
+            const SizedBox(height: 32),
+            _buildInputField(
+                label: 'البريد الإلكتروني', hint: 'البريد الإلكتروني'),
             const SizedBox(height: 16),
             _buildInputField(label: 'الاسم الثلاثي', hint: 'الاسم الثلاثي'),
             const SizedBox(height: 16),
@@ -35,41 +39,29 @@ class SignUpForm extends StatelessWidget {
             const SizedBox(height: 16),
             _buildInputField(label: 'طريقة الاستلام', hint: 'طريقة الاستلام'),
             const SizedBox(height: 16),
-            _buildInputField(label: 'رقم الهوية او استخدم NFC', hint: 'رقم الهوية او استخدم NFC'),
+            _buildInputField(
+                label: 'رقم الهوية او استخدم NFC',
+                hint: 'رقم الهوية او استخدم NFC'),
             const SizedBox(height: 16),
-            _buildInputField(label: 'كلمة المرور', hint: 'كلمة المرور', obscureText: true),
+            _buildInputField(
+                label: 'كلمة المرور', hint: 'كلمة المرور', obscureText: true),
             const SizedBox(height: 16),
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                onPressed: () {
-                  // TODO: Sign-up action
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.red,
-                  padding: const EdgeInsets.symmetric(vertical: 14.0),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                  ),
-                ),
-                child: const Text(
-                  'إنشاء حساب جديد',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 18,
-                  ),
-                ),
-              ),
-            ),
+            _buildActionButton('إنشاء حساب جديد', () {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => const HomePage()),
+              );
+            }),
             const SizedBox(height: 20),
-            _buildSocialMediaSection(),
+            const SocialMedia(),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildInputField({required String label, required String hint, bool obscureText = false}) {
+  Widget _buildInputField(
+      {required String label, required String hint, bool obscureText = false}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -90,66 +82,24 @@ class SignUpForm extends StatelessWidget {
       ],
     );
   }
+}
 
-  Widget _buildSocialMediaSection() {
-    return Column(
-      children: [
-        const Row(
-          children: [
-            Expanded(
-                child: Divider(
-              color: Colors.grey,
-            )),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 8.0),
-              child: Text('أو'),
-            ),
-            Expanded(
-                child: Divider(
-              color: Colors.grey,
-            )),
-          ],
+Widget _buildActionButton(String label, VoidCallback onPressed) {
+  return SizedBox(
+    width: double.infinity,
+    child: ElevatedButton(
+      onPressed: onPressed,
+      style: ElevatedButton.styleFrom(
+        backgroundColor: const Color(0xFFBA110C),
+        padding: const EdgeInsets.symmetric(vertical: 14.0),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10.0),
         ),
-        const SizedBox(height: 16),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            // Facebook button
-            Container(
-              width: 60,
-              height: 60,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                border: Border.all(color: Colors.grey, width: 1),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: IconButton(
-                onPressed: () {},
-                icon: const Icon(Icons.facebook),
-                iconSize: 35,
-                color: Colors.blue,
-              ),
-            ),
-            const SizedBox(width: 20),
-            // Google button
-            Container(
-              width: 60,
-              height: 60,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                border: Border.all(color: Colors.grey, width: 1.0),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: IconButton(
-                onPressed: () {},
-                icon: const Icon(Icons.g_mobiledata),
-                iconSize: 35,
-                color: Colors.red,
-              ),
-            ),
-          ],
-        ),
-      ],
-    );
-  }
+      ),
+      child: Text(
+        label,
+        style: const TextStyle(color: Colors.white, fontSize: 18),
+      ),
+    ),
+  );
 }

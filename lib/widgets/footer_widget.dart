@@ -7,14 +7,18 @@ class FooterWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: const BoxDecoration(
-        color:
-            Color(0xFFBC0019), // Red background for the left and right sections
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(20),
-          topRight: Radius.circular(20),
+        image: DecorationImage(
+          image: AssetImage('assets/images/footer_waves.png'),
+          fit: BoxFit.cover,
         ),
+        color: Color(0xFFBC0019),
+        // borderRadius: BorderRadius.only(
+        //   topLeft: Radius.circular(20),
+        //   topRight: Radius.circular(20),
+        // ),
       ),
-      height: 100, // Adjust height as needed
+      height: 70, // Adjust height as needed
+      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -22,11 +26,10 @@ class FooterWidget extends StatelessWidget {
           Expanded(
             flex: 1, // Allocate 1/3 of the space
             child: Container(
-              color: const Color(0xFFBC0019), // Red background
               alignment: Alignment.center,
               child: Image.asset(
                 'assets/images/logo_left.jpeg', // Ensure this logo exists
-                height: 50, // Adjust logo size
+                height: 70, // Adjust logo size
               ),
             ),
           ),
@@ -35,8 +38,6 @@ class FooterWidget extends StatelessWidget {
           Expanded(
             flex: 1, // Allocate 1/3 of the space
             child: Container(
-              color: const Color(
-                  0xFFDAD8D9), // Light gray background for the middle section
               alignment: Alignment.center,
               child: ElevatedButton(
                 onPressed: () {
@@ -67,11 +68,10 @@ class FooterWidget extends StatelessWidget {
           Expanded(
             flex: 1, // Allocate 1/3 of the space
             child: Container(
-              color: const Color(0xFFBC0019), // Red background
               alignment: Alignment.center,
               child: Image.asset(
                 'assets/images/logo_right.jpeg', // Ensure this logo exists
-                height: 50, // Adjust logo size
+                height: 70, // Adjust logo size
               ),
             ),
           ),
