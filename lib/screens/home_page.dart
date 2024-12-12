@@ -21,13 +21,11 @@ class _HomePageState extends State<HomePage> {
           child: Column(
             children: [
               // Logo at the top
-              Padding(
-                padding: const EdgeInsets.only(top: 20.0),
-                child: Center(
-                  child: Image.asset(
-                    'assets/images/logo_right.jpeg', // Update the path if needed
-                    height: 100,
-                  ),
+              const SizedBox(height: 20),
+              Center(
+                child: Image.asset(
+                  'assets/images/app_logo.png', // Update the path if needed
+                  height: 120,
                 ),
               ),
               const SizedBox(height: 20),
@@ -75,7 +73,9 @@ class _HomePageState extends State<HomePage> {
                 child: SingleChildScrollView(
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                    child: isMainPage ? _buildMainPageContent() : _buildAboutUsContent(),
+                    child: isMainPage
+                        ? _buildMainPageContent()
+                        : _buildAboutUsContent(),
                   ),
                 ),
               ),
@@ -129,45 +129,49 @@ class _HomePageState extends State<HomePage> {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12.0),
       ),
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Text(
-              'صفحة رئيسية',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 20),
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const ComplaintForm()),
-                );
-              },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFFBA110C),
-                  padding: const EdgeInsets.symmetric(vertical: 14.0),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                  ),
-                ),
-                child: const Text(
-                  'اضافة شكوى',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 18,
-                  ),
+      child: SizedBox(
+        height: 500,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 32.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text(
+                'صفحة رئيسية',
+                style: TextStyle(
+                  fontSize: 32,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
-            ),
-          ],
+              const SizedBox(height: 150),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const ComplaintForm()),
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFFBA110C),
+                    padding: const EdgeInsets.symmetric(vertical: 14.0),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                  ),
+                  child: const Text(
+                    'اضافة شكوى',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 18,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -180,28 +184,30 @@ class _HomePageState extends State<HomePage> {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12.0),
       ),
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Text(
-              'من نحن',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
+      child: const SizedBox(
+        height: 500,
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 32.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                'من نحن',
+                style: TextStyle(
+                  fontSize: 32,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-            ),
-            const SizedBox(height: 20),
-            const Text(
-              'تأسست الأمانة العامة لمجلس الوزراء عام 2003 بعد الإعلان عن تشكيل مجلس الحكم العراقي كممثل رسمي للحكومة العراقية لتأخذ على عاتقها إعادة التنظيم الإداري للدولة العراقية من خلال دوائرها عقب إنهيار النظام الدكتاتوري.',
-              style: TextStyle(
-                fontSize: 16,
-                color: Colors.black54,
+              SizedBox(height: 40),
+              Text(
+                'تأسست الأمانة العامة لمجلس الوزراء عام 2003 بعد الإعلان عن تشكيل مجلس الحكم العراقي كممثل رسمي للحكومة العراقية لتأخذ على عاتقها إعادة التنظيم الإداري للدولة العراقية من خلال دوائرها عقب إنهيار النظام الدكتاتوري.',
+                style: TextStyle(
+                  fontSize: 22,
+                  color: Colors.black,
+                ),
               ),
-              textAlign: TextAlign.center,
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

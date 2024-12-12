@@ -28,6 +28,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Card(
+                  color: Colors.white,
                   elevation: 4,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12.0),
@@ -38,51 +39,99 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const SizedBox(height: 20),
-                        const Center(
+                        const SizedBox(height: 32),
+                        const Align(
+                          alignment: Alignment.centerRight,
                           child: Text(
                             'إعادة تعيين كلمة المرور',
                             style: TextStyle(
-                              fontSize: 24,
+                              fontSize: 32,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
                         ),
-                        const SizedBox(height: 8),
-                        const Center(
+                        const SizedBox(height: 32),
+                        const Align(
+                          alignment: Alignment.centerRight,
                           child: Text(
                             'طريقة استلام رابط إعادة تعيين كلمة المرور',
                             style: TextStyle(
                               fontSize: 16,
                               color: Colors.black54,
                             ),
-                            textAlign: TextAlign.center,
                           ),
                         ),
                         const SizedBox(height: 20),
-                        CheckboxListTile(
-                          title: const Text("عن طريق الرسائل القصيرة"),
-                          value: isSmsSelected,
-                          onChanged: (value) {
-                            setState(() {
-                              isSmsSelected = value ?? false;
-                              if (isSmsSelected) {
-                                isEmailSelected = false; // Deselect the other
-                              }
-                            });
-                          },
+                        Row(
+                          children: [
+                            GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  isSmsSelected = !isSmsSelected;
+                                  if (isSmsSelected) {
+                                    isEmailSelected =
+                                        false; // Deselect the other
+                                  }
+                                });
+                              },
+                              child: Row(
+                                children: [
+                                  Checkbox(
+                                    value: isSmsSelected,
+                                    activeColor: const Color(0xFFBA110C),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(4),
+                                    ),
+                                    onChanged: (value) {
+                                      setState(() {
+                                        isSmsSelected = value ?? false;
+                                        if (isSmsSelected) {
+                                          isEmailSelected =
+                                              false; // Deselect the other
+                                        }
+                                      });
+                                    },
+                                  ),
+                                  const Text('عن طريق الرسائل القصيرة'),
+                                ],
+                              ),
+                            ),
+                          ],
                         ),
-                        CheckboxListTile(
-                          title: const Text("عن طريق البريد الإلكتروني"),
-                          value: isEmailSelected,
-                          onChanged: (value) {
-                            setState(() {
-                              isEmailSelected = value ?? false;
-                              if (isEmailSelected) {
-                                isSmsSelected = false; // Deselect the other
-                              }
-                            });
-                          },
+                        Row(
+                          children: [
+                            GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  isEmailSelected = !isEmailSelected;
+                                  if (isEmailSelected) {
+                                    isSmsSelected = false; // Deselect the other
+                                  }
+                                });
+                              },
+                              child: Row(
+                                children: [
+                                  Checkbox(
+                                    value: isEmailSelected,
+                                    activeColor: const Color(0xFFBA110C),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(4),
+                                    ),
+                                    onChanged: (value) {
+                                      setState(() {
+                                        isEmailSelected = value ?? false;
+                                        if (isEmailSelected) {
+                                          isSmsSelected =
+                                              false; // Deselect the other
+                                        }
+                                      });
+                                    },
+                                  ),
+                                  const Text('عن طريق البريد الإلكتروني'),
+                                ],
+                              ),
+                            ),
+                          ],
                         ),
                         const SizedBox(height: 20),
                         SizedBox(
@@ -93,7 +142,8 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                             },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: const Color(0xFFBC0019),
-                              padding: const EdgeInsets.symmetric(vertical: 14.0),
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 14.0),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(10.0),
                               ),

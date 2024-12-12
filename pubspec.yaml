@@ -66,6 +66,7 @@ flutter:
     - assets/fonts/Amiri-Bold.ttf
     - assets/images/logo_left.jpeg
     - assets/images/logo_right.jpeg
+    - assets/images/app_logo.png
     - assets/images/wave_left.jpg
     - assets/images/wave_right.jpg
     - assets/images/footer_waves.png

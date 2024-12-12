@@ -70,7 +70,7 @@ class FooterWidget extends StatelessWidget {
             child: Container(
               alignment: Alignment.center,
               child: Image.asset(
-                'assets/images/logo_right.jpeg', // Ensure this logo exists
+                'assets/images/app_logo.png', // Ensure this logo exists
                 height: 70, // Adjust logo size
               ),
             ),

@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Complaint Application',
       theme: ThemeData(
-        fontFamily: 'Amiri', // Arabic font
+        fontFamily: 'Inter', // Arabic font
         primarySwatch: Colors.deepPurple,
       ),
       locale: const Locale('ar', 'AE'), // Arabic Locale
