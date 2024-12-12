@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'complaint_list.dart'; // Import the ComplaintList page
 import 'package:image_picker/image_picker.dart';
 
 class AddComplaintForm extends StatelessWidget {
@@ -107,10 +108,11 @@ class AddComplaintForm extends StatelessWidget {
                         width: double.infinity,
                         child: ElevatedButton(
                           onPressed: () {
-                            // Submit complaint action
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text('تم إرسال الشكوى بنجاح!'),
+                            // Navigate to ComplaintList
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const ComplaintList(),
                               ),
                             );
                           },
