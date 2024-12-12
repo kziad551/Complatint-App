@@ -19,67 +19,6 @@ class AddComplaintForm extends StatelessWidget {
           centerTitle: true,
         ),
         body: SafeArea(
-<<<<<<< Updated upstream
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Card(
-              color: Colors.white,
-              elevation: 4,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12.0),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      'اضافة شكوى مياه',
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    // First row with two boxes
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        _buildComplaintBox(
-                            'انقطاع المياه', Icons.water_drop),
-                        _buildComplaintBox(
-                            'تلوث المياه', Icons.water_damage),
-                      ],
-                    ),
-                    const SizedBox(height: 20),
-                    // Second row with one box
-                    _buildComplaintBox(
-                        'تسرب المياه', Icons.plumbing_outlined),
-                    const SizedBox(height: 20),
-                    // Bottom button inside the white background
-                    SizedBox(
-                      width: double.infinity,
-                      child: ElevatedButton(
-                        onPressed: selectedCategory != null
-                            ? () {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text(
-                                      'تم إضافة الشكوى: $selectedCategory',
-                                    ),
-                                  ),
-                                );
-                              }
-                            : null, // Disable button if no selection
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: selectedCategory != null
-                              ? const Color(0xFFBA110C)
-                              : Colors.grey, // Button color
-                          padding: const EdgeInsets.symmetric(vertical: 14.0),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10.0),
-                          ),
-=======
           child: SingleChildScrollView(
             child: Padding(
               padding: const EdgeInsets.all(16.0),
@@ -99,7 +38,6 @@ class AddComplaintForm extends StatelessWidget {
                         style: TextStyle(
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
->>>>>>> Stashed changes
                         ),
                       ),
                       const SizedBox(height: 20),
