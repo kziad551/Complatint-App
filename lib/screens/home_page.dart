@@ -170,7 +170,6 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
-
   Widget _buildAboutUsContent() {
     return Card(
       color: Colors.white,
