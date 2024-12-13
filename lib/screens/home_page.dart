@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'complaint_form.dart'; // Adjust path if necessary
+import '../widgets/footer_widget.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -20,16 +20,14 @@ class _HomePageState extends State<HomePage> {
         body: SafeArea(
           child: Column(
             children: [
-              // Logo at the top
               const SizedBox(height: 20),
               Center(
                 child: Image.asset(
-                  'assets/images/app_logo.png', // Update the path if needed
+                  'assets/images/app_logo.png',
                   height: 120,
                 ),
               ),
               const SizedBox(height: 20),
-              // Toggle Tabs
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 32.0),
                 child: Container(
@@ -68,7 +66,6 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
               const SizedBox(height: 20),
-              // Display the appropriate content
               Expanded(
                 child: SingleChildScrollView(
                   child: Padding(
@@ -82,6 +79,7 @@ class _HomePageState extends State<HomePage> {
             ],
           ),
         ),
+        bottomNavigationBar: const FooterWidget(currentPage: 'home_page'),
       ),
     );
   }
@@ -148,11 +146,7 @@ class _HomePageState extends State<HomePage> {
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const ComplaintForm()),
-                    );
+                    Navigator.pushNamed(context, '/complaint_form');
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFFBA110C),
@@ -200,7 +194,7 @@ class _HomePageState extends State<HomePage> {
               ),
               SizedBox(height: 40),
               Text(
-                'تأسست الأمانة العامة لمجلس الوزراء عام 2003 بعد الإعلان عن تشكيل مجلس الحكم العراقي كممثل رسمي للحكومة العراقية لتأخذ على عاتقها إعادة التنظيم الإداري للدولة العراقية من خلال دوائرها عقب إنهيار النظام الدكتاتوري.',
+                'تأسست الأمانة العامة لمجلس الوزراء عام 2003  بعد الإعلان عن تشكيل مجلس الحكم العراقي كممثل رسمي للحكومة العراقية لتأخذ على عاتقها إعادة التنظيم الإداري للدولة العراقية من خلال دوائرها عقب إنهيار النظام الدكتاتوري.',
                 style: TextStyle(
                   fontSize: 22,
                   color: Colors.black,

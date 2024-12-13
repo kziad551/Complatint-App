@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../widgets/footer_widget.dart'; // Import FooterWidget
 
 class ResetPasswordPage extends StatefulWidget {
   const ResetPasswordPage({super.key});
@@ -165,6 +166,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
             ),
           ),
         ),
+        bottomNavigationBar: const FooterWidget(currentPage: 'reset_password'),
       ),
     );
   }

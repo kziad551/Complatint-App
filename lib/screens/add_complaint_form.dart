@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../widgets/footer_widget.dart';
 import 'complaint_list.dart'; // Import the ComplaintList page
 import 'package:image_picker/image_picker.dart';
 
@@ -139,6 +140,7 @@ class AddComplaintForm extends StatelessWidget {
             ),
           ),
         ),
+        bottomNavigationBar: const FooterWidget(currentPage: 'add_complaint_form'),
       ),
     );
   }

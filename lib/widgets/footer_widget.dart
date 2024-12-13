@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'menu_widget.dart'; // Import the MenuWidget for the swipe-up menu
 
 class FooterWidget extends StatelessWidget {
-  const FooterWidget({super.key});
+  final String currentPage; // Add currentPage parameter to track active page
+
+  const FooterWidget({Key? key, required this.currentPage}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -12,10 +15,6 @@ class FooterWidget extends StatelessWidget {
           fit: BoxFit.cover,
         ),
         color: Color(0xFFBC0019),
-        // borderRadius: BorderRadius.only(
-        //   topLeft: Radius.circular(20),
-        //   topRight: Radius.circular(20),
-        // ),
       ),
       height: 70, // Adjust height as needed
       padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 0),
@@ -28,7 +27,7 @@ class FooterWidget extends StatelessWidget {
             child: Container(
               alignment: Alignment.center,
               child: Image.asset(
-                'assets/images/logo_left.jpeg', // Ensure this logo exists
+                'assets/images/logo_left.jpeg',
                 height: 70, // Adjust logo size
               ),
             ),
@@ -41,7 +40,18 @@ class FooterWidget extends StatelessWidget {
               alignment: Alignment.center,
               child: ElevatedButton(
                 onPressed: () {
-                  // TODO: Handle button action
+                  // Show swipe-up menu
+                  showModalBottomSheet(
+                    context: context,
+                    shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.vertical(
+                        top: Radius.circular(20),
+                      ),
+                    ),
+                    builder: (BuildContext context) {
+                      return MenuWidget(currentPage: currentPage); // Pass currentPage
+                    },
+                  );
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.white, // Button background
@@ -70,7 +80,7 @@ class FooterWidget extends StatelessWidget {
             child: Container(
               alignment: Alignment.center,
               child: Image.asset(
-                'assets/images/app_logo.png', // Ensure this logo exists
+                'assets/images/app_logo.png',
                 height: 70, // Adjust logo size
               ),
             ),

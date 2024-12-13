@@ -1,37 +1,30 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
-import 'screens/login_page.dart'; // Import the Login Page
-import 'screens/reset_password_page.dart'; // Import the Reset Password Page
+import 'screens/home_page.dart';
+import 'screens/complaint_form.dart';
+import 'screens/complaint_list.dart';
+import 'screens/reset_password_page.dart';
 
 void main() {
   runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  const MyApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Complaint Application',
+      debugShowCheckedModeBanner: false,
+      title: 'Complaint App',
       theme: ThemeData(
-        fontFamily: 'Inter', // Arabic font
-        primarySwatch: Colors.deepPurple,
+        primarySwatch: Colors.red,
       ),
-      locale: const Locale('ar', 'AE'), // Arabic Locale
-      supportedLocales: const [
-        Locale('ar', 'AE'), // Arabic
-        Locale('en', 'US'), // English
-      ],
-      localizationsDelegates: const [
-        GlobalMaterialLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-      ],
-      initialRoute: '/', // Define the initial route
+      initialRoute: '/',
       routes: {
-        '/': (context) => const LoginPage(), // Login Page as the initial route
-        '/reset-password': (context) => const ResetPasswordPage(), // Reset Password Page
+        '/': (context) => const HomePage(),
+        '/complaint_form': (context) => const ComplaintForm(),
+        '/complaint_list': (context) => const ComplaintList(),
+        '/reset-password': (context) => const ResetPasswordPage(),
       },
     );
   }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../widgets/footer_widget.dart';
 import 'add_complaint_form.dart';
 
 class ComplaintFormCat extends StatefulWidget {
@@ -99,6 +100,7 @@ class _ComplaintFormCatState extends State<ComplaintFormCat> {
             ),
           ),
         ),
+        bottomNavigationBar: const FooterWidget(currentPage: 'complaint_form_cat'),
       ),
     );
   }

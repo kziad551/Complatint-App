@@ -59,7 +59,7 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               ),
               // Footer Widget
-              const FooterWidget(),
+              const FooterWidget(currentPage: 'login_page'),
             ],
           ),
         ),

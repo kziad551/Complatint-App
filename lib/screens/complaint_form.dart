@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'complaint_form_cat.dart'; // Redirect to ComplaintFormCat
+import '../widgets/footer_widget.dart';
+import 'complaint_form_cat.dart';
 
 class ComplaintForm extends StatefulWidget {
   const ComplaintForm({Key? key}) : super(key: key);
@@ -144,6 +145,7 @@ class _ComplaintFormState extends State<ComplaintForm> {
             ),
           ),
         ),
+        bottomNavigationBar: const FooterWidget(currentPage: 'complaint_form'),
       ),
     );
   }

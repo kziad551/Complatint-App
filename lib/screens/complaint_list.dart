@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import '../widgets/footer_widget.dart';
+import 'complaint_list_details.dart';
 
 class ComplaintList extends StatelessWidget {
   const ComplaintList({Key? key}) : super(key: key);
@@ -37,74 +39,97 @@ class ComplaintList extends StatelessWidget {
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: 20),
-                    _buildComplaintRow('شكوى ١', '٢١/١١/٢٠٢٤', 'تمت المراجعة', Colors.green),
+                    _buildComplaintRow(context, 'شكوى ١', '٢١/١١/٢٠٢٤', 'تمت المراجعة', Colors.green),
                     const SizedBox(height: 10),
-                    _buildComplaintRow('شكوى ٢', '٢١/١١/٢٠٢٤', 'ملغاة', Colors.red),
+                    _buildComplaintRow(context, 'شكوى ٢', '٢١/١١/٢٠٢٤', 'ملغاة', Colors.red),
                     const SizedBox(height: 10),
-                    _buildComplaintRow('شكوى ٣', '٢١/١١/٢٠٢٤', 'تمت المراجعة', Colors.green),
+                    _buildComplaintRow(context, 'شكوى ٣', '٢١/١١/٢٠٢٤', 'تمت المراجعة', Colors.green),
                     const SizedBox(height: 10),
-                    _buildComplaintRow('شكوى ٤', '٢١/١١/٢٠٢٤', 'قيد المراجعة', Colors.yellow),
+                    _buildComplaintRow(context, 'شكوى ٤', '٢١/١١/٢٠٢٤', 'قيد المراجعة', Colors.yellow),
                   ],
                 ),
               ),
             ),
           ),
         ),
+        bottomNavigationBar: const FooterWidget(currentPage: 'complaint_list'),
       ),
     );
   }
 
-  Widget _buildComplaintRow(String complaint, String date, String status, Color statusColor) {
-    return Container(
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.grey, width: 1.0),
-        borderRadius: BorderRadius.circular(8.0),
-      ),
-      padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 12.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          // Complaint Info
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                complaint,
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
+  Widget _buildComplaintRow(
+    BuildContext context,
+    String complaint,
+    String date,
+    String status,
+    Color statusColor,
+  ) {
+    return GestureDetector(
+      onTap: () {
+        // Navigate to details page with arguments
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ComplaintListDetails(
+              complaintTitle: complaint,
+              date: date,
+              status: status,
+              statusColor: statusColor,
+            ),
+          ),
+        );
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.grey, width: 1.0),
+          borderRadius: BorderRadius.circular(8.0),
+        ),
+        padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 12.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            // Complaint Info
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  complaint,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
                 ),
+                const SizedBox(height: 4),
+                Text(
+                  date,
+                  style: const TextStyle(
+                    fontSize: 14,
+                    color: Colors.black54,
+                  ),
+                ),
+              ],
+            ),
+            // Status Button
+            Container(
+              width: 120,
+              height: 40,
+              decoration: BoxDecoration(
+                color: statusColor,
+                borderRadius: BorderRadius.circular(8.0),
               ),
-              const SizedBox(height: 4),
-              Text(
-                date,
+              alignment: Alignment.center,
+              child: Text(
+                status,
                 style: const TextStyle(
                   fontSize: 14,
-                  color: Colors.black54,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
                 ),
               ),
-            ],
-          ),
-          // Status Button
-          Container(
-            width: 120, // Fixed width for buttons
-            height: 40, // Fixed height for consistency
-            decoration: BoxDecoration(
-              color: statusColor,
-              borderRadius: BorderRadius.circular(8.0),
             ),
-            alignment: Alignment.center,
-            child: Text(
-              status,
-              style: const TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
