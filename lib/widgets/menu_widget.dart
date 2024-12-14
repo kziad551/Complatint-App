@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../screens/home_page.dart';
 import '../screens/complaint_form.dart';
 import '../screens/complaint_list.dart';
-
+import '../screens/settings.dart';
 class MenuWidget extends StatelessWidget {
   final String currentPage;
 
@@ -66,15 +66,18 @@ class MenuWidget extends StatelessWidget {
               // TODO: Navigate to rating page
             },
           ),
-          _buildMenuRow(
-            context,
-            icon: Icons.settings,
-            text: 'الإعدادات',
-            isActive: currentPage == 'settings',
-            onTap: () {
-              // TODO: Navigate to settings page
-            },
-          ),
+        _buildMenuRow(
+          context,
+          icon: Icons.settings,
+          text: 'الإعدادات',
+          isActive: currentPage == 'settings',
+          onTap: () {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => const SettingsPage()),
+            );
+          },
+        ),
         ],
       ),
     );
