@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../widgets/footer_widget.dart';
+import '../widgets/custom_action_button.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -137,32 +138,18 @@ class _HomePageState extends State<HomePage> {
               const Text(
                 'صفحة رئيسية',
                 style: TextStyle(
-                  fontSize: 32,
+                  fontSize: 40,
                   fontWeight: FontWeight.bold,
                 ),
               ),
               const SizedBox(height: 150),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.pushNamed(context, '/complaint_form');
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFFBA110C),
-                    padding: const EdgeInsets.symmetric(vertical: 14.0),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                  ),
-                  child: const Text(
-                    'اضافة شكوى',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 18,
-                    ),
-                  ),
-                ),
+              CustomActionButton(
+                title: 'اضافة شكوى',
+                titleSize: 24,
+                backgroundColor: const Color(0xFFBA110C),
+                onPressed: () {
+                  Navigator.pushNamed(context, '/complaint_form');
+                },
               ),
             ],
           ),
@@ -170,6 +157,7 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
+
   Widget _buildAboutUsContent() {
     return Card(
       color: Colors.white,
@@ -187,7 +175,7 @@ class _HomePageState extends State<HomePage> {
               Text(
                 'من نحن',
                 style: TextStyle(
-                  fontSize: 32,
+                  fontSize: 40,
                   fontWeight: FontWeight.bold,
                 ),
               ),

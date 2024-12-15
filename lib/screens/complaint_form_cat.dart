@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../widgets/footer_widget.dart';
 import 'add_complaint_form.dart';
+import '../widgets/custom_action_button.dart';
 
 class ComplaintFormCat extends StatefulWidget {
   const ComplaintFormCat({Key? key}) : super(key: key);
@@ -18,89 +19,104 @@ class _ComplaintFormCatState extends State<ComplaintFormCat> {
       textDirection: TextDirection.rtl,
       child: Scaffold(
         backgroundColor: const Color(0xFFD4D6D9),
-        appBar: AppBar(
-          backgroundColor: const Color(0xFFBC0019),
-          title: const Text('اضافة شكوى مياه'),
-          centerTitle: true,
-        ),
         body: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Card(
-              color: Colors.white,
-              elevation: 4,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12.0),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      'اضافة شكوى مياه',
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
+          child: Column(
+            children: [
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 16.0, vertical: 80),
+                    child: Card(
+                      color: Colors.white,
+                      elevation: 4,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12.0),
                       ),
-                    ),
-                    const SizedBox(height: 20),
-                    // First row with two boxes
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        _buildComplaintBox(
-                            'انقطاع المياه', Icons.water_drop),
-                        _buildComplaintBox(
-                            'تلوث المياه', Icons.water_damage),
-                      ],
-                    ),
-                    const SizedBox(height: 20),
-                    // Second row with one box
-                    _buildComplaintBox(
-                        'تسرب المياه', Icons.plumbing_outlined),
-                    const SizedBox(height: 20),
-                    // Bottom button inside the white background
-                    SizedBox(
-                      width: double.infinity,
-                      child: ElevatedButton(
-                        onPressed: selectedCategory != null
-                            ? () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => AddComplaintForm(
-                                      complaintTitle: selectedCategory!,
+                      child: SizedBox(
+                        height: 650,
+                        child: Padding(
+                          padding: const EdgeInsets.fromLTRB(16, 32, 16, 40),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Center(
+                                    child: Text(
+                                      'اضافة شكوى مياه',
+                                      style: TextStyle(
+                                        fontSize: 40,
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                     ),
                                   ),
-                                );
-                              }
-                            : null, // Disable button if no selection
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: selectedCategory != null
-                              ? Colors.red
-                              : Colors.grey, // Button color
-                          padding: const EdgeInsets.symmetric(vertical: 14.0),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10.0),
-                          ),
-                        ),
-                        child: const Text(
-                          'اضافة شكوى',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 18,
+                                  const SizedBox(height: 20),
+                                  const Align(
+                                    alignment: Alignment.centerRight,
+                                    child: Text(
+                                      'الفئة الفرعية',
+                                      style: TextStyle(
+                                        fontSize: 24,
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(height: 10),
+                                  // First row with two boxes
+                                  Wrap(
+                                    spacing: 16.0,
+                                    runSpacing: 16.0,
+                                    alignment: WrapAlignment.start,
+                                    children: [
+                                      _buildComplaintBox(
+                                          'انقطاع المياه', Icons.water_drop),
+                                      _buildComplaintBox(
+                                          'تلوث المياه', Icons.water_damage),
+                                      _buildComplaintBox('تسرب المياه',
+                                          Icons.plumbing_outlined),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 10),
+                                  // Second row with one box
+                                  const SizedBox(height: 20),
+                                ],
+                              ),
+                              // Bottom button
+                              CustomActionButton(
+                                title: 'اضافة شكوى',
+                                titleSize: 24,
+                                backgroundColor: selectedCategory != null
+                                    ? const Color(0xFFBA110C)
+                                    : Colors.grey,
+                                onPressed: selectedCategory != null
+                                    ? () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                AddComplaintForm(
+                                              complaintTitle: selectedCategory!,
+                                            ),
+                                          ),
+                                        );
+                                      }
+                                    : null,
+                              ),
+                            ],
                           ),
                         ),
                       ),
                     ),
-                  ],
+                  ),
                 ),
               ),
-            ),
+            ],
           ),
         ),
-        bottomNavigationBar: const FooterWidget(currentPage: 'complaint_form_cat'),
+        bottomNavigationBar:
+            const FooterWidget(currentPage: 'complaint_form_cat'),
       ),
     );
   }
@@ -119,38 +135,35 @@ class _ComplaintFormCatState extends State<ComplaintFormCat> {
         children: [
           Container(
             width: 150,
-            height: 100,
+            height: 110,
             decoration: BoxDecoration(
               border: Border.all(
                 color: isSelected ? Colors.blue : Colors.grey,
                 width: 2.0,
               ),
-              borderRadius: BorderRadius.circular(12.0),
+              borderRadius: BorderRadius.circular(8.0),
               color: isSelected ? Colors.blue[50] : Colors.white,
             ),
             child: Center(
               child: Container(
-                width: 50,
-                height: 50,
+                width: 80,
+                height: 60,
                 decoration: BoxDecoration(
                   color: Colors.grey[200],
-                  borderRadius: BorderRadius.circular(8.0),
+                  borderRadius: BorderRadius.circular(6.0),
                 ),
-                child: Icon(
-                  icon,
+                child: const Icon(
+                  Icons.water_drop,
                   color: Colors.blue,
-                  size: 30,
+                  size: 35,
                 ),
               ),
             ),
           ),
-          const SizedBox(height: 10),
           Text(
             title,
             style: const TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.bold,
-              color: Colors.black54,
+              fontSize: 18,
             ),
           ),
         ],

@@ -1,6 +1,8 @@
 import 'package:complaint_application/screens/home_page.dart';
 import 'package:complaint_application/widgets/social_media.dart';
 import 'package:flutter/material.dart';
+import 'custom_action_button.dart';
+import 'custom_input_field.dart';
 
 class SignUpForm extends StatelessWidget {
   const SignUpForm({Key? key}) : super(key: key);
@@ -30,28 +32,48 @@ class SignUpForm extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 32),
-            _buildInputField(
-                label: 'البريد الإلكتروني', hint: 'البريد الإلكتروني'),
+            const CustomInputField(
+              label: 'البريد الإلكتروني',
+              hint: 'ادخل البريد الإلكتروني',
+            ),
             const SizedBox(height: 16),
-            _buildInputField(label: 'الاسم الثلاثي', hint: 'الاسم الثلاثي'),
+            const CustomInputField(
+              label: 'الاسم الثلاثي',
+              hint: 'ادخل الاسم الثلاثي',
+            ),
             const SizedBox(height: 16),
-            _buildInputField(label: 'الهاتف', hint: 'الهاتف'),
+            const CustomInputField(
+              label: 'الهاتف',
+              hint: 'ادخل الهاتف',
+            ),
             const SizedBox(height: 16),
-            _buildInputField(label: 'طريقة الاستلام', hint: 'طريقة الاستلام'),
+            const CustomInputField(
+              label: 'طريقة الاستلام',
+              hint: 'ادخل طريقة الاستلام',
+            ),
             const SizedBox(height: 16),
-            _buildInputField(
-                label: 'رقم الهوية او استخدم NFC',
-                hint: 'رقم الهوية او استخدم NFC'),
+            const CustomInputField(
+              label: 'رقم الهوية او استخدم NFC',
+              hint: 'ادخل رقم الهوية او استخدم NFC',
+            ),
             const SizedBox(height: 16),
-            _buildInputField(
-                label: 'كلمة المرور', hint: 'كلمة المرور', obscureText: true),
+            const CustomInputField(
+              label: 'كلمة المرور',
+              hint: 'ادخل كلمة المرور',
+              obscureText: true,
+            ),
             const SizedBox(height: 16),
-            _buildActionButton('إنشاء حساب جديد', () {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => const HomePage()),
-              );
-            }),
+            CustomActionButton(
+              title: 'إنشاء حساب جديد',
+              titleSize: 24,
+              backgroundColor: const Color(0xFFBA110C),
+              onPressed: () {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => const HomePage()),
+                );
+              },
+            ),
             const SizedBox(height: 20),
             const SocialMedia(),
           ],
@@ -59,47 +81,4 @@ class SignUpForm extends StatelessWidget {
       ),
     );
   }
-
-  Widget _buildInputField(
-      {required String label, required String hint, bool obscureText = false}) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Align(
-          alignment: Alignment.centerRight,
-          child: Text(label, style: const TextStyle(fontSize: 16)),
-        ),
-        const SizedBox(height: 8),
-        TextFormField(
-          obscureText: obscureText,
-          decoration: InputDecoration(
-            hintText: hint,
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10.0),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-Widget _buildActionButton(String label, VoidCallback onPressed) {
-  return SizedBox(
-    width: double.infinity,
-    child: ElevatedButton(
-      onPressed: onPressed,
-      style: ElevatedButton.styleFrom(
-        backgroundColor: const Color(0xFFBA110C),
-        padding: const EdgeInsets.symmetric(vertical: 14.0),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10.0),
-        ),
-      ),
-      child: Text(
-        label,
-        style: const TextStyle(color: Colors.white, fontSize: 18),
-      ),
-    ),
-  );
 }

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../widgets/footer_widget.dart'; // Import FooterWidget
+import '../widgets/custom_action_button.dart';
 
 class ResetPasswordPage extends StatefulWidget {
   const ResetPasswordPage({super.key});
@@ -18,11 +18,6 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
       textDirection: TextDirection.rtl,
       child: Scaffold(
         backgroundColor: const Color(0xFFD4D6D9),
-        appBar: AppBar(
-          backgroundColor: const Color(0xFFBC0019),
-          title: const Text('إعادة تعيين كلمة المرور'),
-          centerTitle: true,
-        ),
         body: SafeArea(
           child: Center(
             child: SingleChildScrollView(
@@ -58,11 +53,9 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                             'طريقة استلام رابط إعادة تعيين كلمة المرور',
                             style: TextStyle(
                               fontSize: 16,
-                              color: Colors.black54,
                             ),
                           ),
                         ),
-                        const SizedBox(height: 20),
                         Row(
                           children: [
                             GestureDetector(
@@ -134,30 +127,20 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                             ),
                           ],
                         ),
-                        const SizedBox(height: 20),
-                        SizedBox(
-                          width: double.infinity,
-                          child: ElevatedButton(
-                            onPressed: () {
-                              // Handle sending the reset link
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color(0xFFBC0019),
-                              padding:
-                                  const EdgeInsets.symmetric(vertical: 14.0),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10.0),
-                              ),
-                            ),
-                            child: const Text(
-                              'إرسال رابط إعادة التعيين',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 18,
-                              ),
-                            ),
-                          ),
+                        const SizedBox(height: 40),
+                        CustomActionButton(
+                          title: 'إرسال رابط إعادة التعيين',
+                          titleSize: 24,
+                          backgroundColor: const Color(0xFFBA110C),
+                          onPressed: () {
+                            // Navigator.pushReplacement(
+                            //   context,
+                            //   MaterialPageRoute(
+                            //       builder: (context) => const NewPassword()),
+                            // );
+                          },
                         ),
+                        const SizedBox(height: 40),
                       ],
                     ),
                   ),
@@ -166,7 +149,6 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
             ),
           ),
         ),
-        bottomNavigationBar: const FooterWidget(currentPage: 'reset_password'),
       ),
     );
   }

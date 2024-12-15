@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import '../widgets/footer_widget.dart';
 import 'complaint_list.dart'; // Import the ComplaintList page
 import 'package:image_picker/image_picker.dart';
+import '../widgets/custom_action_button.dart';
+import '../widgets/custom_input_field.dart';
 
 class AddComplaintForm extends StatelessWidget {
   final String complaintTitle;
@@ -15,156 +17,153 @@ class AddComplaintForm extends StatelessWidget {
       textDirection: TextDirection.rtl,
       child: Scaffold(
         backgroundColor: const Color(0xFFD4D6D9),
-        appBar: AppBar(
-          backgroundColor: const Color(0xFFBC0019),
-          title: const Text('تسجيل شكوى عن تلوث المياه'),
-          centerTitle: true,
-        ),
         body: SafeArea(
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Card(
-                color: Colors.white,
-                elevation: 4,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12.0),
-                ),
+          child: Column(children: [
+            Expanded(
+              child: SingleChildScrollView(
                 child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        'تسجيل شكوى عن تلوث المياه',
-                        style: TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const SizedBox(height: 20),
-                      // عنوان الشكوى Input
-                      _buildInputField('عنوان الشكوى', complaintTitle,
-                          isEditable: false),
-                      const SizedBox(height: 16),
-                      // ما هي شكواك Textarea
-                      _buildInputField('ما هي شكواك', ''),
-                      const SizedBox(height: 16),
-                      // Two inputs in one row
-                      Row(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 16.0, vertical: 80),
+                  child: Card(
+                    color: Colors.white,
+                    elevation: 4,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12.0),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16.0, vertical: 32),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Expanded(
-                            child: _buildInputField('اسم المدينة', ''),
+                          const Center(
+                            child: Text(
+                              'تسجيل شكوى عن تلوث المياه',
+                              style: TextStyle(
+                                fontSize: 32,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
                           ),
-                          const SizedBox(width: 10),
-                          Expanded(
-                            child: _buildInputField('اسم او رقم المنطقة', ''),
+                          const SizedBox(height: 20),
+                          CustomInputField(
+                            label: 'عنوان الشكوى',
+                            hint: '',
+                            isEditable: false,
+                            initialValue: complaintTitle,
+                          ),
+                          const SizedBox(height: 16),
+                          const CustomInputField(
+                            label: 'ما هي شكواك',
+                            hint: '',
+                          ),
+                          const SizedBox(height: 16),
+                          // Two inputs in one row
+                          const Row(
+                            children: [
+                              Expanded(
+                                child: CustomInputField(
+                                  label: 'اسم المدينة',
+                                  hint: '',
+                                ),
+                              ),
+                              SizedBox(width: 20),
+                              Expanded(
+                                child: CustomInputField(
+                                  label: 'اسم المدينة',
+                                  hint: '',
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 16),
+                          // One input in one row
+                          const CustomInputField(
+                            label: 'اسم او رقم الشارع',
+                            hint: '',
+                          ),
+                          const SizedBox(height: 16),
+                          // Three boxes with icons
+                          const Align(
+                            alignment: Alignment.centerRight,
+                            child: Text(
+                              'اضف صورة / فيديو / تسجيل صوتي',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              _buildIconBox(context, Icons.image, 'صورة',
+                                  () async {
+                                final ImagePicker picker = ImagePicker();
+                                final XFile? image = await picker.pickImage(
+                                    source: ImageSource.gallery);
+                                if (image != null) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text(
+                                          'تم اختيار الصورة: ${image.name}'),
+                                    ),
+                                  );
+                                }
+                              }),
+                              _buildIconBox(context, Icons.videocam, 'فيديو',
+                                  () async {
+                                final ImagePicker picker = ImagePicker();
+                                final XFile? video = await picker.pickVideo(
+                                    source: ImageSource.gallery);
+                                if (video != null) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text(
+                                          'تم اختيار الفيديو: ${video.name}'),
+                                    ),
+                                  );
+                                }
+                              }),
+                              _buildIconBox(context, Icons.mic, 'مذكرة صوتية',
+                                  () {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content:
+                                        Text('تم فتح تسجيل المذكرة الصوتية'),
+                                  ),
+                                );
+                              }),
+                            ],
+                          ),
+                          const SizedBox(height: 20),
+                          // Bottom button
+                          CustomActionButton(
+                            title: 'اضافة شكوى',
+                            titleSize: 24,
+                            backgroundColor: const Color(0xFFBA110C),
+                            onPressed: () {
+                              // Navigate to ComplaintList
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const ComplaintList(),
+                                ),
+                              );
+                            },
                           ),
                         ],
                       ),
-                      const SizedBox(height: 16),
-                      // One input in one row
-                      _buildInputField('اسم او رقم الشارع', ''),
-                      const SizedBox(height: 16),
-                      // Three boxes with icons
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          _buildIconBox(context, Icons.image, 'صورة', () async {
-                            final ImagePicker picker = ImagePicker();
-                            final XFile? image = await picker.pickImage(
-                                source: ImageSource.gallery);
-                            if (image != null) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text('تم اختيار الصورة: ${image.name}'),
-                                ),
-                              );
-                            }
-                          }),
-                          _buildIconBox(context, Icons.videocam, 'فيديو', () async {
-                            final ImagePicker picker = ImagePicker();
-                            final XFile? video = await picker.pickVideo(
-                                source: ImageSource.gallery);
-                            if (video != null) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text('تم اختيار الفيديو: ${video.name}'),
-                                ),
-                              );
-                            }
-                          }),
-                          _buildIconBox(context, Icons.mic, 'مذكرة صوتية', () {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text('تم فتح تسجيل المذكرة الصوتية'),
-                              ),
-                            );
-                          }),
-                        ],
-                      ),
-                      const SizedBox(height: 20),
-                      // Bottom button
-                      SizedBox(
-                        width: double.infinity,
-                        child: ElevatedButton(
-                          onPressed: () {
-                            // Navigate to ComplaintList
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const ComplaintList(),
-                              ),
-                            );
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.red,
-                            padding: const EdgeInsets.symmetric(vertical: 14.0),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10.0),
-                            ),
-                          ),
-                          child: const Text(
-                            'اضافة شكوى',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 18,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
+          ]),
         ),
         bottomNavigationBar: const FooterWidget(currentPage: 'add_complaint_form'),
       ),
-    );
-  }
-
-  Widget _buildInputField(String label, String hint,
-      {bool isEditable = true}) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: const TextStyle(fontSize: 16, color: Colors.black54),
-        ),
-        const SizedBox(height: 8),
-        TextFormField(
-          initialValue: hint,
-          enabled: isEditable,
-          decoration: InputDecoration(
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10.0),
-            ),
-          ),
-        ),
-      ],
     );
   }
 
@@ -179,7 +178,7 @@ class AddComplaintForm extends StatelessWidget {
             height: 80,
             decoration: BoxDecoration(
               border: Border.all(color: Colors.grey, width: 1.0),
-              borderRadius: BorderRadius.circular(12.0),
+              borderRadius: BorderRadius.circular(10.0),
             ),
             child: Icon(
               icon,
@@ -187,11 +186,11 @@ class AddComplaintForm extends StatelessWidget {
               size: 40,
             ),
           ),
-          const SizedBox(height: 8),
-          Text(
-            label,
-            style: const TextStyle(fontSize: 14, color: Colors.black54),
-          ),
+          // const SizedBox(height: 8),
+          // Text(
+          //   label,
+          //   style: const TextStyle(fontSize: 14, color: Colors.black54),
+          // ),
         ],
       ),
     );

@@ -11,11 +11,6 @@ class ComplaintList extends StatelessWidget {
       textDirection: TextDirection.rtl,
       child: Scaffold(
         backgroundColor: const Color(0xFFD4D6D9),
-        appBar: AppBar(
-          backgroundColor: const Color(0xFFBC0019),
-          title: const Text('قائمة الشكاوى'),
-          centerTitle: true,
-        ),
         body: SafeArea(
           child: Padding(
             padding: const EdgeInsets.all(16.0),
@@ -39,13 +34,17 @@ class ComplaintList extends StatelessWidget {
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: 20),
-                    _buildComplaintRow(context, 'شكوى ١', '٢١/١١/٢٠٢٤', 'تمت المراجعة', Colors.green),
+                    _buildComplaintRow(context, 'شكوى ١', '٢١/١١/٢٠٢٤',
+                        'تمت المراجعة', Colors.green),
                     const SizedBox(height: 10),
-                    _buildComplaintRow(context, 'شكوى ٢', '٢١/١١/٢٠٢٤', 'ملغاة', Colors.red),
+                    _buildComplaintRow(
+                        context, 'شكوى ٢', '٢١/١١/٢٠٢٤', 'ملغاة', Colors.red),
                     const SizedBox(height: 10),
-                    _buildComplaintRow(context, 'شكوى ٣', '٢١/١١/٢٠٢٤', 'تمت المراجعة', Colors.green),
+                    _buildComplaintRow(context, 'شكوى ٣', '٢١/١١/٢٠٢٤',
+                        'تمت المراجعة', Colors.green),
                     const SizedBox(height: 10),
-                    _buildComplaintRow(context, 'شكوى ٤', '٢١/١١/٢٠٢٤', 'قيد المراجعة', Colors.yellow),
+                    _buildComplaintRow(context, 'شكوى ٤', '٢١/١١/٢٠٢٤',
+                        'قيد المراجعة', Colors.yellow),
                   ],
                 ),
               ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../widgets/footer_widget.dart';
 import 'complaint_form_cat.dart';
+import '../widgets/custom_action_button.dart';
 
 class ComplaintForm extends StatefulWidget {
   const ComplaintForm({Key? key}) : super(key: key);
@@ -18,131 +19,136 @@ class _ComplaintFormState extends State<ComplaintForm> {
       textDirection: TextDirection.rtl,
       child: Scaffold(
         backgroundColor: const Color(0xFFD4D6D9),
-        appBar: AppBar(
-          backgroundColor: const Color(0xFFBC0019),
-          title: const Text('اضافة شكوى'),
-          centerTitle: true,
-        ),
         body: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Card(
-              color: Colors.white,
-              elevation: 4,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12.0),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      'اضافة شكوى',
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
+          child: Column(
+            children: [
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 16.0, vertical: 80),
+                    child: Card(
+                      color: Colors.white,
+                      elevation: 4,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12.0),
                       ),
-                    ),
-                    const SizedBox(height: 20),
-                    const Align(
-                      alignment: Alignment.centerRight,
-                      child: Text(
-                        'الفئة',
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.black54,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    // Selectable main box
-                    GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          isSelected = !isSelected; // Toggle selection
-                        });
-                      },
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Container(
-                            width: 150,
-                            height: 100,
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                color: isSelected ? Colors.blue : Colors.grey,
-                                width: 2.0,
-                              ),
-                              borderRadius: BorderRadius.circular(12.0),
-                              color: isSelected ? Colors.blue[50] : Colors.white,
-                            ),
-                            child: Center(
-                              child: Container(
-                                width: 50,
-                                height: 50,
-                                decoration: BoxDecoration(
-                                  color: Colors.grey[200],
-                                  borderRadius: BorderRadius.circular(8.0),
-                                ),
-                                child: const Icon(
-                                  Icons.water_drop,
-                                  color: Colors.blue,
-                                  size: 30,
-                                ),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(height: 10),
-                          const Text(
-                            'شكوى المياه',
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black54,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    // Bottom button inside the white background
-                    SizedBox(
-                      width: double.infinity,
-                      child: ElevatedButton(
-                        onPressed: isSelected
-                            ? () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        const ComplaintFormCat(),
+                      child: SizedBox(
+                        height: 650,
+                        child: Padding(
+                          padding: const EdgeInsets.fromLTRB(16, 32, 16, 40),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Center(
+                                    child: Text(
+                                      'اضافة شكوى',
+                                      style: TextStyle(
+                                        fontSize: 40,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
                                   ),
-                                );
-                              }
-                            : null, // Disable button if no selection
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: isSelected
-                              ? Colors.red
-                              : Colors.grey, // Button color
-                          padding: const EdgeInsets.symmetric(vertical: 14.0),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10.0),
-                          ),
-                        ),
-                        child: const Text(
-                          'اضافة شكوى',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 18,
+                                  const SizedBox(height: 20),
+                                  const Align(
+                                    alignment: Alignment.centerRight,
+                                    child: Text(
+                                      'الفئة',
+                                      style: TextStyle(
+                                        fontSize: 24,
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(height: 10),
+                                  // Selectable main box
+                                  GestureDetector(
+                                    onTap: () {
+                                      setState(() {
+                                        isSelected =
+                                            !isSelected; // Toggle selection
+                                      });
+                                    },
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        Container(
+                                          width: 150,
+                                          height: 110,
+                                          decoration: BoxDecoration(
+                                            border: Border.all(
+                                              color: isSelected
+                                                  ? Colors.blue
+                                                  : Colors.grey,
+                                              width: 2.0,
+                                            ),
+                                            borderRadius:
+                                                BorderRadius.circular(8.0),
+                                            color: isSelected
+                                                ? Colors.blue[50]
+                                                : Colors.white,
+                                          ),
+                                          child: Center(
+                                            child: Container(
+                                              width: 80,
+                                              height: 60,
+                                              decoration: BoxDecoration(
+                                                color: Colors.grey[200],
+                                                borderRadius:
+                                                    BorderRadius.circular(6.0),
+                                              ),
+                                              child: const Icon(
+                                                Icons.water_drop,
+                                                color: Colors.blue,
+                                                size: 35,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        const Text(
+                                          'شكوى المياه',
+                                          style: TextStyle(
+                                            fontSize: 18,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  const SizedBox(height: 20),
+                                ],
+                              ),
+                              // Bottom button
+                              CustomActionButton(
+                                title: 'اضافة شكوى',
+                                titleSize: 24,
+                                backgroundColor: isSelected
+                                    ? const Color(0xFFBA110C)
+                                    : Colors.grey,
+                                onPressed: isSelected
+                                    ? () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                const ComplaintFormCat(),
+                                          ),
+                                        );
+                                      }
+                                    : null,
+                              ),
+                            ],
                           ),
                         ),
                       ),
                     ),
-                  ],
+                  ),
                 ),
               ),
-            ),
+            ],
           ),
         ),
         bottomNavigationBar: const FooterWidget(currentPage: 'complaint_form'),
