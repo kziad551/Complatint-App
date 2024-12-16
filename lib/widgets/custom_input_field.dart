@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 
 class CustomInputField extends StatelessWidget {
@@ -26,7 +28,7 @@ class CustomInputField extends StatelessWidget {
           child: Text(
             label,
             style: const TextStyle(
-              fontSize: 16,
+              fontSize: 12,
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -38,9 +40,14 @@ class CustomInputField extends StatelessWidget {
           obscureText: obscureText,
           decoration: InputDecoration(
             hintText: hint,
+            hintStyle: const TextStyle(color: Colors.grey),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10.0),
             ),
+          ),
+          style: const TextStyle(
+            height: 1,
+            fontSize: 10,
           ),
         ),
       ],

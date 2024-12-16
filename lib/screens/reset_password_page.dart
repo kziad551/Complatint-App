@@ -41,7 +41,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                           child: Text(
                             'إعادة تعيين كلمة المرور',
                             style: TextStyle(
-                              fontSize: 32,
+                              fontSize: 24,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
@@ -52,85 +52,86 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                           child: Text(
                             'طريقة استلام رابط إعادة تعيين كلمة المرور',
                             style: TextStyle(
-                              fontSize: 16,
+                              fontSize: 14,
                             ),
                           ),
                         ),
-                        Row(
-                          children: [
-                            GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  isSmsSelected = !isSmsSelected;
-                                  if (isSmsSelected) {
-                                    isEmailSelected =
-                                        false; // Deselect the other
-                                  }
-                                });
-                              },
-                              child: Row(
-                                children: [
-                                  Checkbox(
-                                    value: isSmsSelected,
-                                    activeColor: const Color(0xFFBA110C),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(4),
-                                    ),
-                                    onChanged: (value) {
-                                      setState(() {
-                                        isSmsSelected = value ?? false;
-                                        if (isSmsSelected) {
-                                          isEmailSelected =
-                                              false; // Deselect the other
-                                        }
-                                      });
-                                    },
-                                  ),
-                                  const Text('عن طريق الرسائل القصيرة'),
-                                ],
+                        GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              isSmsSelected = !isSmsSelected;
+                              if (isSmsSelected) {
+                                isEmailSelected = false; // Deselect the other
+                              }
+                            });
+                          },
+                          child: Row(
+                            children: [
+                              Checkbox(
+                                value: isSmsSelected,
+                                activeColor: const Color(0xFFBA110C),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(4),
+                                ),
+                                onChanged: (value) {
+                                  setState(() {
+                                    isSmsSelected = value ?? false;
+                                    if (isSmsSelected) {
+                                      isEmailSelected =
+                                          false; // Deselect the other
+                                    }
+                                  });
+                                },
                               ),
-                            ),
-                          ],
+                              const Text(
+                                'عن طريق الرسائل القصيرة',
+                                style: TextStyle(
+                                  fontSize: 12,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
-                        Row(
-                          children: [
-                            GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  isEmailSelected = !isEmailSelected;
-                                  if (isEmailSelected) {
-                                    isSmsSelected = false; // Deselect the other
-                                  }
-                                });
-                              },
-                              child: Row(
-                                children: [
-                                  Checkbox(
-                                    value: isEmailSelected,
-                                    activeColor: const Color(0xFFBA110C),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(4),
-                                    ),
-                                    onChanged: (value) {
-                                      setState(() {
-                                        isEmailSelected = value ?? false;
-                                        if (isEmailSelected) {
-                                          isSmsSelected =
-                                              false; // Deselect the other
-                                        }
-                                      });
-                                    },
-                                  ),
-                                  const Text('عن طريق البريد الإلكتروني'),
-                                ],
+                        GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              isEmailSelected = !isEmailSelected;
+                              if (isEmailSelected) {
+                                isSmsSelected = false; // Deselect the other
+                              }
+                            });
+                          },
+                          child: Row(
+                            children: [
+                              Checkbox(
+                                value: isEmailSelected,
+                                activeColor: const Color(0xFFBA110C),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(4),
+                                ),
+                                onChanged: (value) {
+                                  setState(() {
+                                    isEmailSelected = value ?? false;
+                                    if (isEmailSelected) {
+                                      isSmsSelected =
+                                          false; // Deselect the other
+                                    }
+                                  });
+                                },
                               ),
-                            ),
-                          ],
+                              const Text(
+                                'عن طريق البريد الإلكتروني',
+                                style: TextStyle(
+                                  fontSize: 12,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                         const SizedBox(height: 40),
                         CustomActionButton(
                           title: 'إرسال رابط إعادة التعيين',
-                          titleSize: 24,
+                          titleSize: 16,
                           backgroundColor: const Color(0xFFBA110C),
                           onPressed: () {
                             // Navigator.pushReplacement(

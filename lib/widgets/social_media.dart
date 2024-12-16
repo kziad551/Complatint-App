@@ -23,7 +23,7 @@ class SocialMedia extends StatelessWidget {
             )),
           ],
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: 8),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -38,7 +38,8 @@ class SocialMedia extends StatelessWidget {
               ),
               child: IconButton(
                 onPressed: () {},
-                icon: const Icon(Icons.facebook),
+                // icon: const Icon(Icons.facebook),
+                icon: Image.asset("assets/images/Icons/facebook.png"),
                 iconSize: 35,
                 color: Colors.blue,
               ),
@@ -55,7 +56,7 @@ class SocialMedia extends StatelessWidget {
               ),
               child: IconButton(
                 onPressed: () {},
-                icon: const Icon(Icons.g_mobiledata),
+                icon: Image.asset("assets/images/Icons/google.png"),
                 iconSize: 35,
                 color: const Color(0xFFBA110C),
               ),

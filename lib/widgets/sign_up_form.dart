@@ -16,22 +16,22 @@ class SignUpForm extends StatelessWidget {
         borderRadius: BorderRadius.circular(12.0),
       ),
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 24.0),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const SizedBox(height: 32),
+            const SizedBox(height: 20),
             const Align(
               alignment: Alignment.centerRight,
               child: Text(
                 'إنشاء حساب جديد',
                 style: TextStyle(
-                  fontSize: 32,
+                  fontSize: 24,
                   fontWeight: FontWeight.bold,
                 ),
               ),
             ),
-            const SizedBox(height: 32),
+            const SizedBox(height: 16),
             const CustomInputField(
               label: 'البريد الإلكتروني',
               hint: 'ادخل البريد الإلكتروني',
@@ -62,10 +62,10 @@ class SignUpForm extends StatelessWidget {
               hint: 'ادخل كلمة المرور',
               obscureText: true,
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 20),
             CustomActionButton(
               title: 'إنشاء حساب جديد',
-              titleSize: 24,
+              titleSize: 16,
               backgroundColor: const Color(0xFFBA110C),
               onPressed: () {
                 Navigator.pushReplacement(

@@ -22,7 +22,7 @@ class CustomActionButton extends StatelessWidget {
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
           backgroundColor: backgroundColor,
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 10.0),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10.0),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10.0),
           ),

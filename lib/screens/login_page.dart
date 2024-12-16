@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../widgets/toggle_signup_tabs.dart';
+import '../widgets/toggle_tabs.dart';
 import '../widgets/login_form.dart';
 import '../widgets/sign_up_form.dart';
 
@@ -24,16 +24,17 @@ class _LoginPageState extends State<LoginPage> {
             children: [
               Expanded(
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
                   child: Center(
                     child: SingleChildScrollView(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          const SizedBox(height: 20),
-                          // Toggle Tabs for switching between Login and Sign-Up
+                          const SizedBox(height: 40),
                           ToggleTabs(
-                            isSignUp: isSignUp,
+                            isTabOne: isSignUp,
+                            labelTabOne: 'إنشاء حساب جديد',
+                            labelTabTwo: 'تسجيل الدخول',
                             onTabSelected: (value) {
                               setState(() {
                                 isSignUp = value;
@@ -41,15 +42,14 @@ class _LoginPageState extends State<LoginPage> {
                             },
                           ),
                           const SizedBox(height: 20),
-                          // Display the appropriate form
                           isSignUp
-                              ? const SignUpForm() // Sign-Up Form
+                              ? const SignUpForm()
                               : LoginForm(
                                   onForgotPassword: () {
                                     Navigator.pushNamed(
                                         context, '/reset-password');
                                   },
-                                ), // Login Form
+                                ),
                           const SizedBox(height: 20),
                         ],
                       ),

@@ -21,22 +21,22 @@ class LoginForm extends StatelessWidget {
         borderRadius: BorderRadius.circular(12.0),
       ),
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 32.0),
+        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 24.0),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const SizedBox(height: 32),
+            const SizedBox(height: 20),
             const Align(
               alignment: Alignment.centerRight,
               child: Text(
                 'تسجيل الدخول',
                 style: TextStyle(
-                  fontSize: 32,
+                  fontSize: 24,
                   fontWeight: FontWeight.bold,
                 ),
               ),
             ),
-            const SizedBox(height: 32),
+            const SizedBox(height: 16),
             const CustomInputField(
               label: 'البريد الإلكتروني / رقم الهاتف',
               hint: 'ادخل البريد الإلكتروني / رقم الهاتف',
@@ -47,29 +47,34 @@ class LoginForm extends StatelessWidget {
               hint: 'ادخل كلمة المرور',
               obscureText: true,
             ),
-            const SizedBox(height: 8),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Row(
                   children: [
                     Checkbox(value: true, onChanged: (value) {}),
-                    const Text('تذكر كلمة المرور'),
+                    const Text(
+                      'تذكر كلمة المرور',
+                      style: TextStyle(fontSize: 10),
+                    ),
                   ],
                 ),
                 TextButton(
                   onPressed: onForgotPassword,
                   child: const Text(
                     'هل نسيت كلمة المرور؟',
-                    style: TextStyle(color: Colors.blue),
+                    style: TextStyle(
+                      color: Colors.blue,
+                      fontSize: 10,
+                    ),
                   ),
                 ),
               ],
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 20),
             CustomActionButton(
               title: 'تسجيل الدخول',
-              titleSize: 24,
+              titleSize: 16,
               backgroundColor: const Color(0xFFBA110C),
               onPressed: () {
                 Navigator.pushReplacement(
