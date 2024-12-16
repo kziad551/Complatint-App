@@ -3,6 +3,8 @@ import '../screens/home_page.dart';
 import '../screens/complaint_form.dart';
 import '../screens/complaint_list.dart';
 import '../screens/settings.dart';
+import '../screens/complaint_rating.dart'; 
+
 class MenuWidget extends StatelessWidget {
   final String currentPage;
 
@@ -63,21 +65,24 @@ class MenuWidget extends StatelessWidget {
             text: 'قيم نوع مستوى الخدمة',
             isActive: currentPage == 'rate_service',
             onTap: () {
-              // TODO: Navigate to rating page
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => const ComplaintRatingPage()),
+              );
             },
           ),
-        _buildMenuRow(
-          context,
-          icon: Icons.settings,
-          text: 'الإعدادات',
-          isActive: currentPage == 'settings',
-          onTap: () {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => const SettingsPage()),
-            );
-          },
-        ),
+          _buildMenuRow(
+            context,
+            icon: Icons.settings,
+            text: 'الإعدادات',
+            isActive: currentPage == 'settings',
+            onTap: () {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => const SettingsPage()),
+              );
+            },
+          ),
         ],
       ),
     );
