@@ -13,6 +13,7 @@ class FooterWidget extends StatelessWidget {
         image: DecorationImage(
           image: AssetImage('assets/images/footer_waves.png'),
           fit: BoxFit.cover,
+          alignment: Alignment.center,
         ),
         color: Color(0xFFBC0019),
       ),
@@ -64,7 +65,7 @@ class FooterWidget extends StatelessWidget {
                 child: const Text(
                   'القائمة',
                   style: TextStyle(
-                    fontSize: 14,
+                    fontSize: 16,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -81,7 +82,7 @@ class FooterWidget extends StatelessWidget {
                 "giz",
                 style: TextStyle(
                   color: Colors.white,
-                  fontSize: 20,
+                  fontSize: 32,
                   fontWeight: FontWeight.bold,
                 ),
               ),

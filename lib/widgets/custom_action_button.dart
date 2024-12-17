@@ -5,6 +5,7 @@ class CustomActionButton extends StatelessWidget {
   final String title;
   final double titleSize;
   final Color backgroundColor;
+  final bool isFull;
 
   const CustomActionButton({
     super.key,
@@ -12,12 +13,13 @@ class CustomActionButton extends StatelessWidget {
     required this.title,
     required this.titleSize,
     required this.backgroundColor,
+    this.isFull = true,
   });
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: double.infinity,
+      width: isFull ? double.infinity : 2 * MediaQuery.of(context).size.width / 5,
       child: ElevatedButton(
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(

@@ -54,7 +54,7 @@ Widget _card(VoidCallback onTap, bool isSelected, BuildContext context) {
             children: [
               const Center(
                 child: Text(
-                  'اضافة شكوى',
+                  'إضافة شكوى',
                   style: TextStyle(
                     fontSize: 28,
                     fontWeight: FontWeight.bold,
@@ -119,7 +119,7 @@ Widget _card(VoidCallback onTap, bool isSelected, BuildContext context) {
           ),
           // Bottom button
           CustomActionButton(
-            title: 'اضافة شكوى',
+            title: 'إضافة شكوى',
             titleSize: 16,
             backgroundColor: isSelected ? const Color(0xFFBA110C) : Colors.grey,
             onPressed: isSelected

@@ -34,32 +34,32 @@ class SignUpForm extends StatelessWidget {
             const SizedBox(height: 16),
             const CustomInputField(
               label: 'البريد الإلكتروني',
-              hint: 'ادخل البريد الإلكتروني',
+              hint: 'أدخل البريد الإلكتروني',
             ),
             const SizedBox(height: 16),
             const CustomInputField(
               label: 'الاسم الثلاثي',
-              hint: 'ادخل الاسم الثلاثي',
+              hint: 'أدخل الاسم الثلاثي',
             ),
             const SizedBox(height: 16),
             const CustomInputField(
               label: 'الهاتف',
-              hint: 'ادخل الهاتف',
+              hint: 'أدخل الهاتف',
             ),
             const SizedBox(height: 16),
             const CustomInputField(
               label: 'طريقة الاستلام',
-              hint: 'ادخل طريقة الاستلام',
+              hint: 'أدخل طريقة الاستلام',
             ),
             const SizedBox(height: 16),
             const CustomInputField(
               label: 'رقم الهوية او استخدم NFC',
-              hint: 'ادخل رقم الهوية او استخدم NFC',
+              hint: 'أدخل رقم الهوية او استخدم NFC',
             ),
             const SizedBox(height: 16),
             const CustomInputField(
               label: 'كلمة المرور',
-              hint: 'ادخل كلمة المرور',
+              hint: 'أدخل كلمة المرور',
               obscureText: true,
             ),
             const SizedBox(height: 20),

@@ -88,7 +88,7 @@ Widget _card(
 
             // Small Title
             const Text(
-              'اعطي تقييم للشكاوي',
+              'أعطي تقييم للشكاوي',
               style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),
@@ -195,7 +195,7 @@ Widget _card(
               maxLines: 4,
               style: const TextStyle(fontSize: 16),
               decoration: InputDecoration(
-                hintText: 'ادخل الفئة',
+                hintText: 'أدخل الفئة',
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8.0),
                 ),
@@ -203,7 +203,7 @@ Widget _card(
             ),
             const SizedBox(height: 20),
             CustomActionButton(
-              title: "اضافة تعليق",
+              title: "إضافة تعليق",
               titleSize: 16,
               backgroundColor: const Color(0xFFBA110C),
               onPressed: isRatingEnabled

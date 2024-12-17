@@ -1,3 +1,4 @@
+import 'package:complaint_application/widgets/custom_action_button.dart';
 import 'package:complaint_application/widgets/custom_input_field.dart';
 import 'package:flutter/material.dart';
 import '../widgets/custom_layout_page.dart';
@@ -103,10 +104,10 @@ class ComplaintListDetails extends StatelessWidget {
             const SizedBox(height: 32),
             const Divider(color: Colors.grey),
             const SizedBox(height: 32),
-            const CustomInputField(label: 'اضف تعليق', hint: 'اكتب تعليقك هنا'),
+            const CustomInputField(label: 'أضف تعليق', hint: 'اكتب تعليقك هنا'),
             const SizedBox(height: 20),
             const Text(
-              'اعطي تقييم للشكاوي',
+              'أعطي تقييم للشكاوي',
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),
@@ -128,27 +129,12 @@ class ComplaintListDetails extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 20),
-            SizedBox(
-              width: 2 * MediaQuery.of(context).size.width / 5,
-              child: ElevatedButton(
-                onPressed: () {
-                  // Handle submission
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFFBA110C),
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 4.0),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                  ),
-                ),
-                child: const Text('ادخال',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    )),
-              ),
+            CustomActionButton(
+              title: "إدخال",
+              titleSize: 16,
+              backgroundColor: const Color(0xFFBA110C),
+              onPressed: () {},
+              isFull: false,
             ),
           ],
         ),

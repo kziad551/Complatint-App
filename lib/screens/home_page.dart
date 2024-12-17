@@ -59,7 +59,7 @@ class _HomePageState extends State<HomePage> {
               ),
               // const SizedBox(height: 100),
               CustomActionButton(
-                title: 'اضافة شكوى',
+                title: 'إضافة شكوى',
                 titleSize: 16,
                 backgroundColor: const Color(0xFFBA110C),
                 onPressed: () {

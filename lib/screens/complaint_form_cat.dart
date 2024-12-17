@@ -45,7 +45,7 @@ class _ComplaintFormCatState extends State<ComplaintFormCat> {
               children: [
                 const Center(
                   child: Text(
-                    'اضافة شكوى مياه',
+                    'إضافة شكوى مياه',
                     style: TextStyle(
                       fontSize: 28,
                       fontWeight: FontWeight.bold,
@@ -79,7 +79,7 @@ class _ComplaintFormCatState extends State<ComplaintFormCat> {
             ),
             // Bottom button
             CustomActionButton(
-              title: 'اضافة شكوى',
+              title: 'إضافة شكوى',
               titleSize: 16,
               backgroundColor: selectedCategory != null
                   ? const Color(0xFFBA110C)

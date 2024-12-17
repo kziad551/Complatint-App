@@ -39,12 +39,12 @@ class LoginForm extends StatelessWidget {
             const SizedBox(height: 16),
             const CustomInputField(
               label: 'البريد الإلكتروني / رقم الهاتف',
-              hint: 'ادخل البريد الإلكتروني / رقم الهاتف',
+              hint: 'أدخل البريد الإلكتروني / رقم الهاتف',
             ),
             const SizedBox(height: 16),
             const CustomInputField(
               label: 'كلمة المرور',
-              hint: 'ادخل كلمة المرور',
+              hint: 'أدخل كلمة المرور',
               obscureText: true,
             ),
             Row(

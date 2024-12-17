@@ -63,14 +63,14 @@ class AddComplaintForm extends StatelessWidget {
               children: [
                 Expanded(
                   child: CustomInputField(
-                    label: 'اسم المدينة',
+                    label: 'إسم المدينة',
                     hint: '',
                   ),
                 ),
                 SizedBox(width: 20),
                 Expanded(
                   child: CustomInputField(
-                    label: 'اسم المدينة',
+                    label: 'إسم المدينة',
                     hint: '',
                   ),
                 ),
@@ -79,7 +79,7 @@ class AddComplaintForm extends StatelessWidget {
             const SizedBox(height: 16),
             // One input in one row
             const CustomInputField(
-              label: 'اسم او رقم الشارع',
+              label: 'إسم او رقم الشارع',
               hint: '',
             ),
             const SizedBox(height: 16),
@@ -87,7 +87,7 @@ class AddComplaintForm extends StatelessWidget {
             const Align(
               alignment: Alignment.centerRight,
               child: Text(
-                'اضف صورة / فيديو / تسجيل صوتي',
+                'أضف صورة / فيديو / تسجيل صوتي',
                 style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.bold,
@@ -134,7 +134,7 @@ class AddComplaintForm extends StatelessWidget {
             const SizedBox(height: 20),
             // Bottom button
             CustomActionButton(
-              title: 'اضافة شكوى',
+              title: 'إضافة شكوى',
               titleSize: 16,
               backgroundColor: const Color(0xFFBA110C),
               onPressed: () {
