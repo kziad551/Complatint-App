@@ -89,7 +89,7 @@ class AddComplaintForm extends StatelessWidget {
               child: Text(
                 'اضف صورة / فيديو / تسجيل صوتي',
                 style: TextStyle(
-                  fontSize: 12,
+                  fontSize: 14,
                   fontWeight: FontWeight.bold,
                 ),
               ),

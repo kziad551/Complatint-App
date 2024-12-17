@@ -55,7 +55,7 @@ class LoginForm extends StatelessWidget {
                     Checkbox(value: true, onChanged: (value) {}),
                     const Text(
                       'تذكر كلمة المرور',
-                      style: TextStyle(fontSize: 10),
+                      style: TextStyle(fontSize: 12),
                     ),
                   ],
                 ),
@@ -65,7 +65,7 @@ class LoginForm extends StatelessWidget {
                     'هل نسيت كلمة المرور؟',
                     style: TextStyle(
                       color: Colors.blue,
-                      fontSize: 10,
+                      fontSize: 12,
                     ),
                   ),
                 ),

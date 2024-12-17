@@ -86,7 +86,7 @@ class _HomePageState extends State<HomePage> {
           padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 32.0),
           child: Column(
             mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Text(
                 'من نحن',
@@ -95,13 +95,10 @@ class _HomePageState extends State<HomePage> {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              // SizedBox(height: 20),
+              SizedBox(height: 40),
               Text(
                 'تأسست الأمانة العامة لمجلس الوزراء عام 2003  بعد الإعلان عن تشكيل مجلس الحكم العراقي كممثل رسمي للحكومة العراقية لتأخذ على عاتقها إعادة التنظيم الإداري للدولة العراقية من خلال دوائرها عقب إنهيار النظام الدكتاتوري.',
-                style: TextStyle(
-                  fontSize: 12,
-                  color: Colors.black,
-                ),
+                style: TextStyle(fontSize: 18),
               ),
             ],
           ),

@@ -52,7 +52,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                           child: Text(
                             'طريقة استلام رابط إعادة تعيين كلمة المرور',
                             style: TextStyle(
-                              fontSize: 14,
+                              fontSize: 16,
                             ),
                           ),
                         ),
@@ -86,7 +86,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                               const Text(
                                 'عن طريق الرسائل القصيرة',
                                 style: TextStyle(
-                                  fontSize: 12,
+                                  fontSize: 14,
                                 ),
                               ),
                             ],
@@ -122,7 +122,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                               const Text(
                                 'عن طريق البريد الإلكتروني',
                                 style: TextStyle(
-                                  fontSize: 12,
+                                  fontSize: 14,
                                 ),
                               ),
                             ],

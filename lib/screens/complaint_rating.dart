@@ -81,7 +81,7 @@ Widget _card(
             const Center(
               child: Text(
                 'قيم نوع مستوى الخدمة',
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
               ),
             ),
             const SizedBox(height: 20),
@@ -89,7 +89,7 @@ Widget _card(
             // Small Title
             const Text(
               'اعطي تقييم للشكاوي',
-              style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),
 
@@ -103,7 +103,7 @@ Widget _card(
                 child: DropdownButton<String>(
                   padding: const EdgeInsets.symmetric(horizontal: 8.0),
                   borderRadius: BorderRadius.circular(8.0),
-                  style: const TextStyle(fontSize: 10),
+                  style: const TextStyle(fontSize: 16),
                   isExpanded: true,
                   value: activeComplaint,
                   hint: const Text(
@@ -148,7 +148,7 @@ Widget _card(
                       activeComplaint,
                       textAlign: TextAlign.center,
                       style: const TextStyle(
-                        fontSize: 14,
+                        fontSize: 16,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -187,13 +187,13 @@ Widget _card(
             // Comment Section
             const Text(
               'تعليق',
-              style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 10),
             TextField(
               controller: commentController,
               maxLines: 4,
-              style: const TextStyle(fontSize: 10),
+              style: const TextStyle(fontSize: 16),
               decoration: InputDecoration(
                 hintText: 'ادخل الفئة',
                 border: OutlineInputBorder(

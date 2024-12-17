@@ -15,7 +15,13 @@ class SocialMedia extends StatelessWidget {
             )),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 8.0),
-              child: Text('أو'),
+              child: Text(
+                'أو',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                ),
+              ),
             ),
             Expanded(
                 child: Divider(

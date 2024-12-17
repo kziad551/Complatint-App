@@ -116,14 +116,14 @@ class ComplaintList extends StatelessWidget {
                 Text(
                   complaint,
                   style: const TextStyle(
-                    fontSize: 14,
+                    fontSize: 16,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
                 Text(
                   date,
                   style: const TextStyle(
-                    fontSize: 12,
+                    fontSize: 14,
                     color: Colors.grey,
                   ),
                 ),
@@ -131,7 +131,7 @@ class ComplaintList extends StatelessWidget {
             ),
             // Status Button
             Container(
-              width: 110,
+              width: 120,
               // height: 40,
               padding: const EdgeInsets.symmetric(vertical: 6),
               decoration: BoxDecoration(
@@ -142,7 +142,7 @@ class ComplaintList extends StatelessWidget {
               child: Text(
                 status,
                 style: const TextStyle(
-                  fontSize: 12,
+                  fontSize: 16,
                   fontWeight: FontWeight.bold,
                   color: Colors.white,
                 ),

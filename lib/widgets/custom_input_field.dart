@@ -28,7 +28,7 @@ class CustomInputField extends StatelessWidget {
           child: Text(
             label,
             style: const TextStyle(
-              fontSize: 12,
+              fontSize: 14,
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -47,7 +47,7 @@ class CustomInputField extends StatelessWidget {
           ),
           style: const TextStyle(
             height: 1,
-            fontSize: 10,
+            fontSize: 16,
           ),
         ),
       ],

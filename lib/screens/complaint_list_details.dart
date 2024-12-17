@@ -87,7 +87,7 @@ class ComplaintListDetails extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 const Text('١٠/١١/٢٠٢٤',
-                    style: TextStyle(fontSize: 14, color: Colors.black)),
+                    style: TextStyle(fontSize: 16, color: Colors.black)),
                 _buildStatusButton('قيد المراجعة', const Color(0xFFFFCD03)),
               ],
             ),
@@ -96,16 +96,19 @@ class ComplaintListDetails extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 const Text('٢١/١١/٢٠٢٤',
-                    style: TextStyle(fontSize: 14, color: Colors.black)),
+                    style: TextStyle(fontSize: 16, color: Colors.black)),
                 _buildStatusButton('تمت المراجعة', const Color(0xFF48EF00)),
               ],
             ),
             const SizedBox(height: 32),
             const Divider(color: Colors.grey),
+            const SizedBox(height: 32),
             const CustomInputField(label: 'اضف تعليق', hint: 'اكتب تعليقك هنا'),
             const SizedBox(height: 20),
-            const Text('اعطي تقييم للشكاوي',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+            const Text(
+              'اعطي تقييم للشكاوي',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            ),
             const SizedBox(height: 8),
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
@@ -133,8 +136,8 @@ class ComplaintListDetails extends StatelessWidget {
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFFBA110C),
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 16, vertical: 4.0),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 4.0),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10.0),
                   ),
@@ -171,7 +174,7 @@ class ComplaintListDetails extends StatelessWidget {
           ),
           child: Text(
             value,
-            style: const TextStyle(fontSize: 12),
+            style: const TextStyle(fontSize: 16),
           ),
         ),
       ],
@@ -190,7 +193,7 @@ class ComplaintListDetails extends StatelessWidget {
       child: Text(
         status,
         style: const TextStyle(
-          fontSize: 12,
+          fontSize: 16,
           fontWeight: FontWeight.bold,
           color: Colors.white,
         ),
