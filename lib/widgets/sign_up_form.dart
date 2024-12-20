@@ -1,8 +1,9 @@
-import 'package:complaint_application/screens/home_page.dart';
-import 'package:complaint_application/widgets/social_media.dart';
 import 'package:flutter/material.dart';
+import '../screens/home_page.dart';
+import 'social_media.dart';
 import 'custom_action_button.dart';
 import 'custom_input_field.dart';
+import 'custom_dropdown_field.dart';
 
 class SignUpForm extends StatelessWidget {
   const SignUpForm({Key? key}) : super(key: key);
@@ -47,9 +48,14 @@ class SignUpForm extends StatelessWidget {
               hint: 'أدخل الهاتف',
             ),
             const SizedBox(height: 16),
-            const CustomInputField(
+            CustomDropdownField(
               label: 'طريقة الاستلام',
-              hint: 'أدخل طريقة الاستلام',
+              hint: 'إختر طريقة الاستلام',
+              items: ['رسائل نصية', 'واتساب', 'ايميل', 'اتصال هاتفي'],
+              selectedItem: null, // Optional: Pass the currently selected item
+              onChanged: (value) {
+                // Handle the selected value
+              },
             ),
             const SizedBox(height: 16),
             const CustomInputField(
@@ -60,6 +66,12 @@ class SignUpForm extends StatelessWidget {
             const CustomInputField(
               label: 'كلمة المرور',
               hint: 'أدخل كلمة المرور',
+              obscureText: true,
+            ),
+            const SizedBox(height: 20),
+            const CustomInputField(
+              label: 'إعادة كلمة المرور',
+              hint: 'أدخل كلمة المرور مجددًا',
               obscureText: true,
             ),
             const SizedBox(height: 20),
