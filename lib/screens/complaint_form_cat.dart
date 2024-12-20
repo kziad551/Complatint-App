@@ -1,10 +1,13 @@
+import 'package:complaint_application/widgets/custom_complaint_box.dart';
 import 'package:flutter/material.dart';
 import 'add_complaint_form.dart';
-import '../widgets/custom_action_button.dart';
+// import '../widgets/custom_action_button.dart';
 import '../widgets/custom_layout_page.dart';
 
 class ComplaintFormCat extends StatefulWidget {
-  const ComplaintFormCat({super.key});
+  final String? complaintType;
+
+  const ComplaintFormCat({super.key, required this.complaintType});
 
   @override
   _ComplaintFormCatState createState() => _ComplaintFormCatState();
@@ -19,7 +22,7 @@ class _ComplaintFormCatState extends State<ComplaintFormCat> {
       textDirection: TextDirection.rtl,
       child: CustomLayoutPage(
         currentPage: "complaint_form_cat",
-        cardContent: _card(context),
+        cardContent: _card(context, widget.complaintType),
         containFooter: true,
         containLogo: true,
         containToggle: false,
@@ -27,7 +30,7 @@ class _ComplaintFormCatState extends State<ComplaintFormCat> {
     );
   }
 
-  Widget _card(BuildContext context) {
+  Widget _card(BuildContext context, String? complaintType) {
     return Card(
       color: Colors.white,
       elevation: 4,
@@ -43,112 +46,118 @@ class _ComplaintFormCatState extends State<ComplaintFormCat> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Center(
+                Center(
                   child: Text(
-                    'إضافة شكوى مياه',
-                    style: TextStyle(
+                    'إضافة $complaintType',
+                    style: const TextStyle(
                       fontSize: 28,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),
                 const SizedBox(height: 20),
-                const Align(
-                  alignment: Alignment.centerRight,
-                  child: Text(
-                    'الفئة الفرعية',
-                    style: TextStyle(
-                      fontSize: 18,
-                    ),
-                  ),
-                ),
+                // const Align(
+                //   alignment: Alignment.centerRight,
+                //   child: Text(
+                //     'الفئة الفرعية',
+                //     style: TextStyle(
+                //       fontSize: 18,
+                //     ),
+                //   ),
+                // ),
                 const SizedBox(height: 10),
-                // First row with two boxes
-                Wrap(
-                  spacing: 16.0,
-                  runSpacing: 16.0,
-                  alignment: WrapAlignment.start,
-                  children: [
-                    _buildComplaintBox('انقطاع المياه', Icons.water_drop),
-                    _buildComplaintBox('تلوث المياه', Icons.water_damage),
-                    _buildComplaintBox('تسرب المياه', Icons.plumbing_outlined),
-                  ],
-                ),
-                const SizedBox(height: 40),
+                SizedBox(
+                  width: double.infinity,
+                  child: Wrap(
+                    spacing: 16.0,
+                    runSpacing: 16.0,
+                    alignment: WrapAlignment.start,
+                    children: [
+                      CustomComplaintBox(
+                        title: 'انقطاع المياه',
+                        icon: Icons.water_drop,
+                        iconColor: Colors.blue,
+                        isSelected: selectedCategory == 'انقطاع المياه',
+                        onTap: () {
+                          setState(() {
+                            selectedCategory = 'انقطاع المياه';
+                          });
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => AddComplaintForm(
+                                complaintTitle: selectedCategory!,
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                      CustomComplaintBox(
+                        title: 'تلوث المياه',
+                        icon: Icons.water_damage,
+                        iconColor: Colors.amber,
+                        isSelected: selectedCategory == 'تلوث المياه',
+                        onTap: () {
+                          setState(() {
+                            selectedCategory = 'تلوث المياه';
+                          });
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => AddComplaintForm(
+                                complaintTitle: selectedCategory!,
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                      CustomComplaintBox(
+                        title: 'تسرب المياه',
+                        icon: Icons.plumbing_outlined,
+                        iconColor: Colors.green,
+                        isSelected: selectedCategory == 'تسرب المياه',
+                        onTap: () {
+                          setState(() {
+                            selectedCategory = 'تسرب المياه';
+                          });
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => AddComplaintForm(
+                                complaintTitle: selectedCategory!,
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+                )
+                // const SizedBox(height: 40),
               ],
             ),
             // Bottom button
-            CustomActionButton(
-              title: 'إضافة شكوى',
-              titleSize: 16,
-              backgroundColor: selectedCategory != null
-                  ? const Color(0xFFBA110C)
-                  : Colors.grey,
-              onPressed: selectedCategory != null
-                  ? () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => AddComplaintForm(
-                            complaintTitle: selectedCategory!,
-                          ),
-                        ),
-                      );
-                    }
-                  : null,
-            ),
+            // CustomActionButton(
+            //   title: 'إضافة شكوى',
+            //   titleSize: 16,
+            //   backgroundColor: selectedCategory != null
+            //       ? const Color(0xFFBA110C)
+            //       : Colors.grey,
+            //   onPressed: selectedCategory != null
+            //       ? () {
+            //           Navigator.push(
+            //             context,
+            //             MaterialPageRoute(
+            //               builder: (context) => AddComplaintForm(
+            //                 complaintTitle: selectedCategory!,
+            //               ),
+            //             ),
+            //           );
+            //         }
+            //       : null,
+            // ),
           ],
         ),
-      ),
-    );
-  }
-
-  Widget _buildComplaintBox(String title, IconData icon) {
-    final isSelected = selectedCategory == title;
-
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          selectedCategory = title;
-        });
-      },
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Container(
-            width: 140,
-            height: 100,
-            decoration: BoxDecoration(
-              border: Border.all(
-                color: isSelected ? Colors.blue : Colors.grey,
-                width: 2.0,
-              ),
-              borderRadius: BorderRadius.circular(8.0),
-              color: isSelected ? Colors.blue[50] : Colors.white,
-            ),
-            child: Center(
-              child: Container(
-                width: 80,
-                height: 60,
-                decoration: BoxDecoration(
-                  color: Colors.grey[200],
-                  borderRadius: BorderRadius.circular(6.0),
-                ),
-                child: const Icon(
-                  Icons.water_drop,
-                  color: Colors.blue,
-                  size: 35,
-                ),
-              ),
-            ),
-          ),
-          Text(
-            title,
-            style: const TextStyle(
-              fontSize: 14,
-            ),
-          ),
-        ],
       ),
     );
   }
