@@ -6,11 +6,12 @@ import 'screens/reset_password_page.dart';
 import 'screens/login_page.dart'; // Add the Login Page
 
 void main() {
+  // await dotenv.load(); // Load the .env file
   runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {

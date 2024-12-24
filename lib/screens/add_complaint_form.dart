@@ -1,3 +1,8 @@
+// import 'dart:convert';
+import 'package:flutter/foundation.dart';
+// import 'package:geolocator/geolocator.dart';
+// import 'package:http/http.dart' as http;
+import 'package:complaint_application/widgets/custom_dropdown_field.dart';
 import 'package:flutter/material.dart';
 import 'complaint_list.dart'; // Import the ComplaintList page
 import 'package:image_picker/image_picker.dart';
@@ -14,7 +19,164 @@ class AddComplaintForm extends StatefulWidget {
   _AddComplaintFormState createState() => _AddComplaintFormState();
 }
 
-class _AddComplaintFormState extends State<AddComplaintForm> {
+class _AddComplaintFormState extends State<AddComplaintForm>
+    with WidgetsBindingObserver {
+  String? selectedGovernorate; // Selected governorate
+  String? selectedDistrict; // Selected district
+
+  // Iraq's governorates and their districts
+  final Map<String, List<String>> governorateDistricts = {
+    'بغداد': ['الرصافة', 'الكرخ', 'مدينة الصدر', 'الشعلة'],
+    'البصرة': ['الزبير', 'القرنة', 'الفاو', 'أم قصر', 'شط العرب'],
+    'نينوى': ['الموصل', 'تلعفر', 'سنجار', 'بعشيقة', 'الحمدانية'],
+    'الأنبار': ['الرمادي', 'الفلوجة', 'القائم', 'هيت', 'حديثة', 'الرطبة'],
+    'بابل': ['الحلة', 'المسيب', 'المحاويل', 'المدحتية'],
+    'ذي قار': ['الناصرية', 'سوق الشيوخ', 'الرفاعي', 'الشطرة', 'الجبايش'],
+    'ديالى': ['بعقوبة', 'المقدادية', 'الخالص', 'بلدروز', 'خانقين', 'المنصورية'],
+    'دهوك': ['دهوك', 'زاخو', 'سيميل', 'عقرة'],
+    'أربيل': ['أربيل', 'شقلاوة', 'كويسنجق', 'حرير'],
+    'كركوك': ['كركوك', 'الدبس', 'الحويجة', 'الرياض', 'التون كوبري'],
+    'السليمانية': ['السليمانية', 'جمجمال', 'رانية', 'دوكان', 'كلار'],
+    'صلاح الدين': ['تكريت', 'سامراء', 'بيجي', 'بلد', 'الشرقاط', 'الضلوعية'],
+    'القادسية': ['الديوانية', 'الشامية', 'عفك', 'البدير'],
+    'واسط': ['الكوت', 'النعمانية', 'الصويرة', 'العزيزية'],
+    'المثنى': ['السماوة', 'الرميثة', 'الخضر', 'الوركاء'],
+    'ميسان': ['العمارة', 'المجر الكبير', 'الكحلاء', 'علي الغربي'],
+    'كربلاء': ['كربلاء', 'عين التمر', 'الحر'],
+    'النجف': ['النجف', 'الكوفة', 'المناذرة', 'أبو صخير'],
+  };
+
+  @override
+  void initState() {
+    super.initState();
+    // Fetch user's location and set the governorate
+    fetchUserLocation();
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this as WidgetsBindingObserver);
+    super.dispose();
+    if (kDebugMode) {
+      print("disposed");
+    }
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    if (kDebugMode) {
+      print("state: $state");
+    }
+    if (state == AppLifecycleState.resumed) {
+      // Re-check location services when app is resumed
+      fetchUserLocation();
+    }
+  }
+
+  void fetchUserLocation() async {
+    // Simulate fetching the user's location (replace with actual location fetching logic)
+    String userGovernorate = 'بغداد'; // Example: fetched governorate
+    setState(() {
+      selectedGovernorate = userGovernorate;
+    });
+  }
+  // Fetch user location and extract the governorate
+  // Future<void> fetchUserLocation() async {
+  //   try {
+  //     // Check location service and permissions
+  //     bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+  //     if (!serviceEnabled) {
+  //       if (mounted) {
+  //         showDialog(
+  //           context: context,
+  //           builder: (BuildContext context) {
+  //             return AlertDialog(
+  //               title: const Text('Location Services Disabled'),
+  //               content: const Text(
+  //                   'Location services are disabled. Please enable them to proceed.'),
+  //               actions: [
+  //                 TextButton(
+  //                   onPressed: () {
+  //                     Navigator.of(context).pop();
+  //                   },
+  //                   child: const Text('Cancel'),
+  //                 ),
+  //                 TextButton(
+  //                   onPressed: () {
+  //                     Geolocator.openLocationSettings();
+  //                     Navigator.of(context).pop();
+  //                   },
+  //                   child: const Text('Open Settings'),
+  //                 ),
+  //               ],
+  //             );
+  //           },
+  //         );
+  //       }
+  //       return; // Exit the function to prevent further processing
+  //     }
+
+  //     LocationPermission permission = await Geolocator.checkPermission();
+  //     if (permission == LocationPermission.denied) {
+  //       permission = await Geolocator.requestPermission();
+  //       if (permission == LocationPermission.denied) {
+  //         throw Exception('Location permission denied.');
+  //       }
+  //     }
+
+  //     if (permission == LocationPermission.deniedForever) {
+  //       throw Exception('Location permissions are permanently denied.');
+  //     }
+
+  //     const String apiKey = 'AIzaSyANwACdCLadd5KmXYeKKU2ERoJtbl0EfkE';
+  //     if (apiKey.isEmpty) {
+  //       throw Exception('Google API key is not set in the .env file.');
+  //     }
+
+  //     // Fetch the current position
+  //     Position position = await Geolocator.getCurrentPosition(
+  //         desiredAccuracy: LocationAccuracy.high);
+
+  //     // Reverse geocode to get governorate
+  //     final response = await http.get(
+  //       Uri.parse(
+  //           'https://maps.googleapis.com/maps/api/geocode/json?language=ar&latlng=${position.latitude},${position.longitude}&key=$apiKey'),
+  //     );
+
+  //     if (response.statusCode == 200) {
+  //       final data = json.decode(response.body);
+
+  //       // Parse results to find the governorate
+  //       String? userGovernorate;
+  //       final results = data['results'] as List<dynamic>;
+  //       for (var result in results) {
+  //         if (result['types'] != null &&
+  //             result['types'].contains('administrative_area_level_1')) {
+  //           userGovernorate = result['address_components'][0]['long_name'];
+  //           break;
+  //         }
+  //       }
+
+  //       // Fallback to default if no governorate is found
+  //       if (userGovernorate == null || userGovernorate.isEmpty) {
+  //         userGovernorate = 'بغداد';
+  //       }
+
+  //       setState(() {
+  //         selectedGovernorate = userGovernorate;
+  //       });
+  //     } else {
+  //       throw Exception('Failed to fetch geolocation data.');
+  //     }
+  //   } catch (e) {
+  //     if (kDebugMode) print('Error fetching location: $e');
+  //     setState(() {
+  //       selectedGovernorate = 'بغداد'; // Default fallback
+  //     });
+  //   }
+  // }
+
   @override
   Widget build(BuildContext context) {
     return Directionality(
@@ -64,24 +226,60 @@ class _AddComplaintFormState extends State<AddComplaintForm> {
             ),
             const SizedBox(height: 16),
             // Two inputs in one row
-            const Row(
+            Row(
               children: [
                 Expanded(
-                  child: CustomInputField(
+                  child: CustomDropdownField(
                     label: 'إسم المحافظة',
                     hint: '',
+                    items: governorateDistricts.keys.toList(),
+                    selectedItem: selectedGovernorate,
+                    onChanged: (value) {
+                      setState(() {
+                        selectedGovernorate = value;
+                        selectedDistrict =
+                            null; // Reset district when governorate changes
+                      });
+                    },
                   ),
                 ),
-                SizedBox(width: 20),
+                const SizedBox(width: 20),
                 Expanded(
-                  child: CustomInputField(
+                  child: CustomDropdownField(
                     label: 'إسم القضاء',
                     hint: '',
+                    items: selectedGovernorate != null
+                        ? governorateDistricts[selectedGovernorate]!
+                        : [],
+                    selectedItem: selectedDistrict,
+                    onChanged: (value) {
+                      setState(() {
+                        selectedDistrict = value;
+                      });
+                    },
                   ),
                 ),
               ],
             ),
             const SizedBox(height: 16),
+            // const Row(
+            //   children: [
+            //     Expanded(
+            //       child: CustomInputField(
+            //         label: 'إسم المحافظة',
+            //         hint: '',
+            //       ),
+            //     ),
+            //     SizedBox(width: 20),
+            //     Expanded(
+            //       child: CustomInputField(
+            //         label: 'إسم القضاء',
+            //         hint: '',
+            //       ),
+            //     ),
+            //   ],
+            // ),
+            // const SizedBox(height: 16),
             // One input in one row
             const CustomInputField(
               label: 'إسم او رقم الشارع',

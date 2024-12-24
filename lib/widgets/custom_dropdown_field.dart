@@ -34,6 +34,7 @@ class CustomDropdownField extends StatelessWidget {
         const SizedBox(height: 8),
         DropdownButtonFormField<String>(
           value: selectedItem,
+          menuMaxHeight: 250,
           dropdownColor: Colors.white,
           decoration: InputDecoration(
             contentPadding: const EdgeInsets.symmetric(horizontal: 12.0),

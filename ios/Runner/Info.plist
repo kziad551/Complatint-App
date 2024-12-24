@@ -21,6 +21,24 @@
 			تطبيقك يحتاج للوصول إلى الميكروفون
 		</string>
 		<key>
+			NSLocationWhenInUseUsageDescription
+		</key>
+		<string>
+			تطبيقك بحاجة إلى موقعك لتقديم خدمات أفضل
+		</string>
+		<key>
+			NSLocationAlwaysUsageDescription
+		</key>
+		<string>
+			تطبيقك بحاجة إلى موقعك لتقديم خدمات أفضل
+		</string>
+		<key>
+			NSLocationAlwaysAndWhenInUseUsageDescription
+		</key>
+		<string>
+			تطبيقك بحاجة إلى موقعك لتقديم خدمات أفضل
+		</string>
+		<key>
 			CFBundleDevelopmentRegion
 		</key>
 		<string>
