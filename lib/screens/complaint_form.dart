@@ -78,7 +78,7 @@ class _ComplaintFormState extends State<ComplaintForm> {
                       context,
                       MaterialPageRoute(
                         builder: (context) => ComplaintFormCat(
-                          complaintType: selectedComplaint,
+                          complaintType: selectedComplaint as String,
                         ),
                       ),
                     );

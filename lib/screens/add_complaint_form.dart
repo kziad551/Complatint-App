@@ -5,18 +5,23 @@ import '../widgets/custom_action_button.dart';
 import '../widgets/custom_input_field.dart';
 import '../widgets/custom_layout_page.dart';
 
-class AddComplaintForm extends StatelessWidget {
+class AddComplaintForm extends StatefulWidget {
   final String complaintTitle;
 
   const AddComplaintForm({super.key, required this.complaintTitle});
 
+  @override
+  _AddComplaintFormState createState() => _AddComplaintFormState();
+}
+
+class _AddComplaintFormState extends State<AddComplaintForm> {
   @override
   Widget build(BuildContext context) {
     return Directionality(
       textDirection: TextDirection.rtl,
       child: CustomLayoutPage(
         currentPage: "add_complaint_form",
-        cardContent: _card(complaintTitle, context),
+        cardContent: _card(widget.complaintTitle, context),
         containFooter: true,
         containLogo: true,
         containToggle: false,
@@ -36,10 +41,10 @@ class AddComplaintForm extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Center(
+            Center(
               child: Text(
-                'تسجيل شكوى عن تلوث المياه',
-                style: TextStyle(
+                'تسجيل شكوى عن $complaintTitle',
+                style: const TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
                 ),
@@ -63,14 +68,14 @@ class AddComplaintForm extends StatelessWidget {
               children: [
                 Expanded(
                   child: CustomInputField(
-                    label: 'إسم المدينة',
+                    label: 'إسم المحافظة',
                     hint: '',
                   ),
                 ),
                 SizedBox(width: 20),
                 Expanded(
                   child: CustomInputField(
-                    label: 'إسم المدينة',
+                    label: 'إسم القضاء',
                     hint: '',
                   ),
                 ),
@@ -98,30 +103,41 @@ class AddComplaintForm extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
+                // Photo Box
                 _buildIconBox(context, Icons.image, 'صورة', () async {
                   final ImagePicker picker = ImagePicker();
-                  final XFile? image =
-                      await picker.pickImage(source: ImageSource.gallery);
-                  if (image != null) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text('تم اختيار الصورة: ${image.name}'),
-                      ),
-                    );
+                  // Show options to the user
+                  final ImageSource? source =
+                      await _showSourceSelectionDialog(context);
+                  if (source != null) {
+                    final XFile? image = await picker.pickImage(source: source);
+                    if (image != null) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('تم اختيار الصورة: ${image.name}'),
+                        ),
+                      );
+                    }
                   }
                 }),
+                // Video Box
                 _buildIconBox(context, Icons.videocam, 'فيديو', () async {
                   final ImagePicker picker = ImagePicker();
-                  final XFile? video =
-                      await picker.pickVideo(source: ImageSource.gallery);
-                  if (video != null) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text('تم اختيار الفيديو: ${video.name}'),
-                      ),
-                    );
+                  // Show options to the user
+                  final ImageSource? source =
+                      await _showSourceSelectionDialog(context);
+                  if (source != null) {
+                    final XFile? video = await picker.pickVideo(source: source);
+                    if (video != null) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('تم اختيار الفيديو: ${video.name}'),
+                        ),
+                      );
+                    }
                   }
                 }),
+                // Voice Memo Box
                 _buildIconBox(context, Icons.mic, 'مذكرة صوتية', () {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
@@ -174,6 +190,36 @@ class AddComplaintForm extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+
+  Future<ImageSource?> _showSourceSelectionDialog(BuildContext context) async {
+    return showDialog<ImageSource>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('اختر المصدر'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                leading: const Icon(Icons.camera_alt),
+                title: const Text('الكاميرا'),
+                onTap: () {
+                  Navigator.pop(context, ImageSource.camera);
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.photo),
+                title: const Text('المعرض'),
+                onTap: () {
+                  Navigator.pop(context, ImageSource.gallery);
+                },
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }

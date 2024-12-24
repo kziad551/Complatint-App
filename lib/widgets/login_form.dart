@@ -8,9 +8,9 @@ class LoginForm extends StatelessWidget {
   final VoidCallback onForgotPassword;
 
   const LoginForm({
-    Key? key,
+    super.key,
     required this.onForgotPassword,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -88,33 +88,6 @@ class LoginForm extends StatelessWidget {
           ],
         ),
       ),
-    );
-  }
-
-  Widget _buildInputField(
-      {required String label, required String hint, bool obscureText = false}) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Align(
-          alignment: Alignment.centerRight,
-          child: Text(label,
-              style: const TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-              )),
-        ),
-        const SizedBox(height: 8),
-        TextFormField(
-          obscureText: obscureText,
-          decoration: InputDecoration(
-            hintText: hint,
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10.0),
-            ),
-          ),
-        ),
-      ],
     );
   }
 }

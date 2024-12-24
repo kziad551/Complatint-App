@@ -5,7 +5,7 @@ import 'add_complaint_form.dart';
 import '../widgets/custom_layout_page.dart';
 
 class ComplaintFormCat extends StatefulWidget {
-  final String? complaintType;
+  final String complaintType;
 
   const ComplaintFormCat({super.key, required this.complaintType});
 
@@ -30,7 +30,7 @@ class _ComplaintFormCatState extends State<ComplaintFormCat> {
     );
   }
 
-  Widget _card(BuildContext context, String? complaintType) {
+  Widget _card(BuildContext context, String complaintType) {
     return Card(
       color: Colors.white,
       elevation: 4,
@@ -86,7 +86,7 @@ class _ComplaintFormCatState extends State<ComplaintFormCat> {
                             context,
                             MaterialPageRoute(
                               builder: (context) => AddComplaintForm(
-                                complaintTitle: selectedCategory!,
+                                complaintTitle: selectedCategory as String,
                               ),
                             ),
                           );
@@ -105,7 +105,7 @@ class _ComplaintFormCatState extends State<ComplaintFormCat> {
                             context,
                             MaterialPageRoute(
                               builder: (context) => AddComplaintForm(
-                                complaintTitle: selectedCategory!,
+                                complaintTitle: selectedCategory as String,
                               ),
                             ),
                           );
@@ -124,7 +124,7 @@ class _ComplaintFormCatState extends State<ComplaintFormCat> {
                             context,
                             MaterialPageRoute(
                               builder: (context) => AddComplaintForm(
-                                complaintTitle: selectedCategory!,
+                                complaintTitle: selectedCategory as String,
                               ),
                             ),
                           );
