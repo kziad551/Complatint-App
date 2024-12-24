@@ -19,7 +19,10 @@ class CustomActionButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: isFull ? double.infinity : 2 * MediaQuery.of(context).size.width / 5,
+      // width: isFull ? double.infinity : 2 * MediaQuery.of(context).size.width / 5,
+      width: isFull
+          ? double.infinity
+          : (MediaQuery.of(context).size.width / 2) - 36,
       child: ElevatedButton(
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(

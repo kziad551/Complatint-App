@@ -13,6 +13,7 @@ class ComplaintForm extends StatefulWidget {
 
 class _ComplaintFormState extends State<ComplaintForm> {
   String? selectedComplaint;
+  String selectedCategory = 'خدمة عامة'; // Default category
 
   @override
   Widget build(BuildContext context) {
@@ -52,6 +53,33 @@ class _ComplaintFormState extends State<ComplaintForm> {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
+                ),
+                const SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    _buildCategoryButton(
+                      context,
+                      title: 'خدمة عامة',
+                      isSelected: selectedCategory == 'خدمة عامة',
+                      onPressed: () {
+                        setState(() {
+                          selectedCategory = 'خدمة عامة';
+                        });
+                      },
+                    ),
+                    const SizedBox(width: 8),
+                    _buildCategoryButton(
+                      context,
+                      title: 'مستفيد من الخدمة',
+                      isSelected: selectedCategory == 'مستفيد من الخدمة',
+                      onPressed: () {
+                        setState(() {
+                          selectedCategory = 'مستفيد من الخدمة';
+                        });
+                      },
+                    ),
+                  ],
                 ),
                 const SizedBox(height: 20),
                 const Align(
@@ -108,6 +136,34 @@ class _ComplaintFormState extends State<ComplaintForm> {
             //       : null,
             // ),
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCategoryButton(BuildContext context,
+      {required String title,
+      required bool isSelected,
+      required VoidCallback onPressed}) {
+    return SizedBox(
+      // width: isFull ? double.infinity : 2 * MediaQuery.of(context).size.width / 5,
+      width: (MediaQuery.of(context).size.width / 2) - 40,
+      child: ElevatedButton(
+        onPressed: onPressed,
+        style: ElevatedButton.styleFrom(
+          backgroundColor: isSelected ? const Color(0xFFBA110C) : Colors.white,
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10.0),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10.0),
+          ),
+        ),
+        child: Text(
+          title,
+          style: TextStyle(
+            color: isSelected ? Colors.white : Colors.black,
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+          ),
         ),
       ),
     );
