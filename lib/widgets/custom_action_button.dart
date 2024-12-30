@@ -6,6 +6,7 @@ class CustomActionButton extends StatelessWidget {
   final double titleSize;
   final Color backgroundColor;
   final bool isFull;
+  final Widget? child; // Add child parameter for customization
 
   const CustomActionButton({
     super.key,
@@ -14,6 +15,7 @@ class CustomActionButton extends StatelessWidget {
     required this.titleSize,
     required this.backgroundColor,
     this.isFull = true,
+    this.child,
   });
 
   @override
@@ -32,14 +34,15 @@ class CustomActionButton extends StatelessWidget {
             borderRadius: BorderRadius.circular(10.0),
           ),
         ),
-        child: Text(
-          title,
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: titleSize,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
+        child: child ??
+            Text(
+              title,
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: titleSize,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
       ),
     );
   }

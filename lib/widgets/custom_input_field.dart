@@ -8,6 +8,7 @@ class CustomInputField extends StatelessWidget {
   final String? initialValue;
   final bool obscureText;
   final bool? isEditable;
+  final TextEditingController? controller; // Added controller parameter
 
   const CustomInputField({
     super.key,
@@ -16,6 +17,7 @@ class CustomInputField extends StatelessWidget {
     this.initialValue = '',
     this.obscureText = false,
     this.isEditable = true,
+    this.controller,
   });
 
   @override
@@ -35,7 +37,9 @@ class CustomInputField extends StatelessWidget {
         ),
         const SizedBox(height: 8),
         TextFormField(
-          initialValue: initialValue,
+          controller: controller,
+          initialValue: controller == null ? initialValue : null,
+          // initialValue: initialValue,
           enabled: isEditable,
           obscureText: obscureText,
           decoration: InputDecoration(
