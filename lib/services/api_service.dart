@@ -24,7 +24,7 @@ class ApiService {
 
       // Check if user exists
       if (data['data'].isEmpty) {
-        throw Exception('Invalid credentials');
+        throw Exception('بيانات الاعتماد غير صحيحة');
       }
 
       // Extract user data
@@ -33,16 +33,16 @@ class ApiService {
       // Validate password
       if (user['password'] != (password ?? "_empty")) {
         // Adjust if hashing passwords
-        throw Exception('Invalid credentials');
+        throw Exception('بيانات الاعتماد غير صحيحة');
       }
 
       return user;
     } else {
       if (kDebugMode) {
-        print("Failed to fetch user: ${response.body}");
+        print("فشل في استرداد المستخدم: ${response.body}");
       }
       throw Exception(
-          'Something went wrong while logging in.\nPlease try again later.');
+          'حدث خطأ أثناء تسجيل الدخول.\nيرجى المحاولة مرة أخرى لاحقًا.');
     }
   }
 }

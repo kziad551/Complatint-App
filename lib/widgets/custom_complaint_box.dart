@@ -8,24 +8,25 @@ class CustomComplaintBox extends StatelessWidget {
   final VoidCallback onTap;
 
   const CustomComplaintBox({
-    super.key,
+    Key? key,
     required this.title,
     required this.icon,
     required this.iconColor,
     required this.isSelected,
     required this.onTap,
-  });
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Container(
             width: (MediaQuery.of(context).size.width / 2) - 44,
-            height: 100,
+            height: 90, // Adjusted for better spacing
             decoration: BoxDecoration(
               border: Border.all(
                 color: isSelected ? Colors.blue : Colors.grey,
@@ -36,11 +37,11 @@ class CustomComplaintBox extends StatelessWidget {
             ),
             child: Center(
               child: Container(
-                width: 80,
+                width: 60,
                 height: 60,
                 decoration: BoxDecoration(
-                  color: Colors.grey[200],
-                  borderRadius: BorderRadius.circular(6.0),
+                  color: const Color(0xFFD9D9D9), // Grey background
+                  borderRadius: BorderRadius.circular(8.0),
                 ),
                 child: Icon(
                   icon,
@@ -50,10 +51,18 @@ class CustomComplaintBox extends StatelessWidget {
               ),
             ),
           ),
-          Text(
-            title,
-            style: const TextStyle(
-              fontSize: 14,
+          const SizedBox(height: 8),
+          Flexible(
+            child: Text(
+              title,
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                fontSize: 17, // Increased font size
+                fontWeight: FontWeight.bold, // Bolded text
+                color: Colors.black,
+                overflow: TextOverflow.ellipsis,
+              ),
+              maxLines: 2, // Limits to two lines
             ),
           ),
         ],

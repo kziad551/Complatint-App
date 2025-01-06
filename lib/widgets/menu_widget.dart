@@ -1,14 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../screens/home_page.dart';
 import '../screens/complaint_form.dart';
 import '../screens/complaint_list.dart';
 import '../screens/settings.dart';
-import '../screens/complaint_rating.dart'; 
+import '../screens/complaint_rating.dart';
+import '../screens/login_page.dart'; // Import LoginPage for redirection after logout
 
 class MenuWidget extends StatelessWidget {
   final String currentPage;
 
   const MenuWidget({Key? key, required this.currentPage}) : super(key: key);
+
+  Future<void> handleLogout(BuildContext context) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('isLoggedIn', false); // Clear login status
+
+    // Navigate to Login Page
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(builder: (context) => const LoginPage()),
+      (route) => false,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -82,6 +96,14 @@ class MenuWidget extends StatelessWidget {
                 MaterialPageRoute(builder: (context) => const SettingsPage()),
               );
             },
+          ),
+          const Divider(color: Colors.grey), // Divider for better UI
+          _buildMenuRow(
+            context,
+            icon: Icons.logout,
+            text: 'تسجيل الخروج',
+            isActive: false, // Logout doesn't have an active state
+            onTap: () => handleLogout(context), // Call logout function
           ),
         ],
       ),

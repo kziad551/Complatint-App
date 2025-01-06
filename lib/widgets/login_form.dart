@@ -1,18 +1,17 @@
-import 'package:complaint_application/services/api_service.dart';
-import 'package:complaint_application/widgets/social_media.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import '../screens/home_page.dart'; // Import HomePage
-import 'custom_action_button.dart';
-import 'custom_input_field.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import '../services/api_service.dart';
+import '../screens/home_page.dart';
+import '../widgets/custom_action_button.dart';
+import '../widgets/custom_input_field.dart';
 
 class LoginForm extends StatefulWidget {
   final VoidCallback onForgotPassword;
 
   const LoginForm({
-    super.key,
+    Key? key,
     required this.onForgotPassword,
-  });
+  }) : super(key: key);
 
   @override
   _LoginFormState createState() => _LoginFormState();
@@ -21,8 +20,7 @@ class LoginForm extends StatefulWidget {
 class _LoginFormState extends State<LoginForm> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  final ApiService apiService =
-      ApiService(baseUrl: 'http://157.230.87.143:8055');
+  final ApiService apiService = ApiService(baseUrl: 'http://157.230.87.143:8055');
 
   bool isLoading = false;
 
@@ -36,28 +34,30 @@ class _LoginFormState extends State<LoginForm> {
         emailController.text.trim(),
         passwordController.text.trim(),
       );
-      if (kDebugMode) {
-        print("user: $user");
-      }
+
+      final userId = user['id'];
+
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setBool('isLoggedIn', true);
+      await prefs.setInt('userId', userId);
+
       if (!mounted) return;
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => const HomePage()),
       );
     } catch (error) {
-      final errorMessage = error is Exception
-          ? error.toString().replaceFirst('Exception: ', '')
-          : error.toString();
-      if (!mounted) return; // Ensure the widget is still mounted
+      final errorMessage = error.toString().replaceFirst('Exception: ', '');
+      if (!mounted) return;
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
-          title: const Text('Login Failed'),
+          title: const Text('خطأ'),
           content: Text(errorMessage),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('OK'),
+              child: const Text('موافق'),
             ),
           ],
         ),
@@ -82,7 +82,6 @@ class _LoginFormState extends State<LoginForm> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const SizedBox(height: 20),
             const Align(
               alignment: Alignment.centerRight,
               child: Text(
@@ -93,63 +92,26 @@ class _LoginFormState extends State<LoginForm> {
                 ),
               ),
             ),
-            const SizedBox(height: 16),
             CustomInputField(
-              label: 'البريد الإلكتروني / رقم الهاتف',
-              hint: 'أدخل البريد الإلكتروني / رقم الهاتف',
+              label: 'البريد الإلكتروني',
+              hint: 'أدخل البريد الإلكتروني',
               controller: emailController,
             ),
-            const SizedBox(height: 16),
             CustomInputField(
               label: 'كلمة المرور',
               hint: 'أدخل كلمة المرور',
               obscureText: true,
               controller: passwordController,
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  children: [
-                    Checkbox(value: true, onChanged: (value) {}),
-                    const Text(
-                      'تذكر كلمة المرور',
-                      style: TextStyle(fontSize: 12),
-                    ),
-                  ],
-                ),
-                TextButton(
-                  onPressed: widget.onForgotPassword,
-                  child: const Text(
-                    'هل نسيت كلمة المرور؟',
-                    style: TextStyle(
-                      color: Colors.blue,
-                      fontSize: 12,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 20),
             CustomActionButton(
               title: isLoading ? '' : 'تسجيل الدخول',
-              // title: 'تسجيل الدخول',
               titleSize: 16,
               backgroundColor: const Color(0xFFBA110C),
-              onPressed: isLoading ? null : () => handleLogin(),
+              onPressed: isLoading ? null : handleLogin,
               child: isLoading
-                  ? const SizedBox(
-                      width: 20,
-                      height: 20,
-                      child: CircularProgressIndicator(
-                        color: Colors.white,
-                        strokeWidth: 3.0,
-                      ),
-                    )
+                  ? const CircularProgressIndicator(color: Colors.white)
                   : null,
             ),
-            const SizedBox(height: 20),
-            const SocialMedia(),
           ],
         ),
       ),

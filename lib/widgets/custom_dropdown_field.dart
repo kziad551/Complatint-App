@@ -8,13 +8,13 @@ class CustomDropdownField extends StatelessWidget {
   final ValueChanged<String?> onChanged;
 
   const CustomDropdownField({
-    super.key,
+    Key? key,
     required this.label,
     required this.hint,
     required this.items,
     this.selectedItem,
     required this.onChanged,
-  });
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +47,7 @@ class CustomDropdownField extends StatelessWidget {
             hint,
             style: const TextStyle(color: Colors.grey, fontSize: 16),
           ),
-          items: items.map((String item) {
+          items: items.toSet().map((String item) { // Ensure unique items
             return DropdownMenuItem<String>(
               value: item,
               child: Align(
