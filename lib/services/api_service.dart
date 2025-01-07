@@ -7,10 +7,8 @@ class ApiService {
 
   ApiService({required this.baseUrl});
 
-  Future<Map<String, dynamic>> login(
-    String? email,
-    String? password,
-  ) async {
+  /// Login Function
+  Future<Map<String, dynamic>> login(String? email, String? password) async {
     final url = Uri.parse(
         '$baseUrl/items/Users?filter[email][_eq]=${email ?? "_empty"}');
 
@@ -44,5 +42,25 @@ class ApiService {
       throw Exception(
           'حدث خطأ أثناء تسجيل الدخول.\nيرجى المحاولة مرة أخرى لاحقًا.');
     }
+  }
+
+  /// Update User Password
+  Future<bool> updateUserPassword(int userId, String newPassword) async {
+    final url = Uri.parse('$baseUrl/items/Users/$userId');
+    final body = {
+      'password': newPassword, // Adjust this to match your CMS field name
+    };
+
+    final response = await http.patch(
+      url,
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode(body),
+    );
+
+    if (kDebugMode) {
+      print('Password Reset Response: ${response.body}');
+    }
+
+    return response.statusCode == 200 || response.statusCode == 204;
   }
 }

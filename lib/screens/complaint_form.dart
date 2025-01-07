@@ -125,7 +125,7 @@ class _ComplaintFormState extends State<ComplaintForm> {
                     itemBuilder: (context, index) {
                       final category = categories[index];
                       return CustomComplaintBox(
-                        title: category['name'] ?? 'No Name', // Display title
+                        title: category['name'] ?? 'No Name',
                         icon: _mapStringToIcon(category['icon']),
                         iconColor: Colors.blue,
                         isSelected: selectedComplaint == category['name'],
@@ -133,18 +133,18 @@ class _ComplaintFormState extends State<ComplaintForm> {
                           setState(() {
                             selectedComplaint = category['name'];
                           });
-Navigator.push(
-  context,
-  MaterialPageRoute(
-    builder: (context) => ComplaintFormCat(
-      complaintType: category['name'] ?? '', // Pass the complaint type
-      selectedCategory: selectedCategory, // Pass the selected category
-      serviceType: selectedCategory, // Pass the serviceType
-      selectedTitle: category['name'] ?? 'No Name', // Pass the selected title
-    ),
-  ),
-);
-
+                          print('Navigating to ComplaintFormCat with service_type: $selectedCategory');
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ComplaintFormCat(
+                                complaintType: selectedComplaint ?? '',
+                                selectedCategory: selectedCategory,
+                                serviceType: selectedCategory,
+                                selectedTitle: selectedComplaint ?? '',
+                              ),
+                            ),
+                          );
                         },
                       );
                     },

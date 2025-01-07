@@ -123,18 +123,19 @@ class _ComplaintFormCatState extends State<ComplaintFormCat> {
                           setState(() {
                             selectedSubCategoryId = subCategory['id'];
                           });
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => AddComplaintForm(
-                                subCategory: selectedSubCategoryId.toString(),
-                                complaintType: widget.complaintType,
-                                selectedCategory: widget.selectedCategory,
-                                serviceType: widget.serviceType,
-                                title: widget.selectedTitle,
-                              ),
+                          print('Navigating to ziad ddComplaintForm with service_type: ${widget.serviceType}');
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => AddComplaintForm(
+                              subCategory: selectedSubCategoryId.toString(),
+                              complaintType: widget.complaintType,
+                              selectedCategory: widget.selectedCategory,
+                              serviceType: widget.serviceType,
+                              title: widget.selectedTitle,
                             ),
-                          );
+                          ),
+                        );
                         },
                       );
                     },

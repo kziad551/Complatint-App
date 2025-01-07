@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../widgets/custom_action_button.dart';
+import '../screens/reset_password.dart'; // Import the correct file
 
 class ResetPasswordPage extends StatefulWidget {
   const ResetPasswordPage({super.key});
@@ -134,11 +135,13 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                           titleSize: 16,
                           backgroundColor: const Color(0xFFBA110C),
                           onPressed: () {
-                            // Navigator.pushReplacement(
-                            //   context,
-                            //   MaterialPageRoute(
-                            //       builder: (context) => const NewPassword()),
-                            // );
+                            // Navigate to reset_password.dart
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const ResetPassword(), // Use ResetPassword
+                              ),
+                            );
                           },
                         ),
                         const SizedBox(height: 40),

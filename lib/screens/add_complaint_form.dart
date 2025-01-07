@@ -1,7 +1,9 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../widgets/custom_dropdown_field.dart';
 import '../widgets/custom_layout_page.dart';
@@ -35,28 +37,14 @@ class _AddComplaintFormState extends State<AddComplaintForm> {
   String? streetNameOrNumber;
   XFile? imageFile;
   XFile? videoFile;
-  XFile? audioFile;
+  File? voiceFile; // Voice file picker
   int? userId;
+
+  final ImagePicker _picker = ImagePicker();
 
   final Map<String, List<String>> governorateDistricts = {
     'بغداد': ['الرصافة', 'الكرخ', 'مدينة الصدر', 'الشعلة'],
     'البصرة': ['الزبير', 'القرنة', 'الفاو', 'أم قصر', 'شط العرب'],
-    'نينوى': ['الموصل', 'تلعفر', 'سنجار', 'بعشيقة', 'الحمدانية'],
-    'الأنبار': ['الرمادي', 'الفلوجة', 'القائم', 'هيت', 'حديثة', 'الرطبة'],
-    'بابل': ['الحلة', 'المسيب', 'المحاويل', 'المدحتية'],
-    'ذي قار': ['الناصرية', 'سوق الشيوخ', 'الرفاعي', 'الشطرة', 'الجبايش'],
-    'ديالى': ['بعقوبة', 'المقدادية', 'الخالص', 'بلدروز', 'خانقين', 'المنصورية'],
-    'دهوك': ['دهوك', 'زاخو', 'سيميل', 'عقرة'],
-    'أربيل': ['أربيل', 'شقلاوة', 'كويسنجق', 'حرير'],
-    'كركوك': ['كركوك', 'الدبس', 'الحويجة', 'الرياض', 'التون كوبري'],
-    'السليمانية': ['السليمانية', 'جمجمال', 'رانية', 'دوكان', 'كلار'],
-    'صلاح الدين': ['تكريت', 'سامراء', 'بيجي', 'بلد', 'الشرقاط', 'الضلوعية'],
-    'القادسية': ['الديوانية', 'الشامية', 'عفك', 'البدير'],
-    'واسط': ['الكوت', 'النعمانية', 'الصويرة', 'العزيزية'],
-    'المثنى': ['السماوة', 'الرميثة', 'الخضر', 'الوركاء'],
-    'ميسان': ['العمارة', 'المجر الكبير', 'الكحلاء', 'علي الغربي'],
-    'كربلاء': ['كربلاء', 'عين التمر', 'الحر'],
-    'النجف': ['النجف', 'الكوفة', 'المناذرة', 'أبو صخير'],
   };
 
   @override
@@ -72,47 +60,85 @@ class _AddComplaintFormState extends State<AddComplaintForm> {
     });
   }
 
-  Future<void> pickMedia(String type) async {
-    final ImagePicker picker = ImagePicker();
+  Future<String?> uploadMediaToDirectus(File file) async {
+    const apiUrl = 'http://157.230.87.143:8055/files';
+    final request = http.MultipartRequest('POST', Uri.parse(apiUrl))
+      ..headers['Authorization'] = 'Bearer b5vPGIUKQ6KmC7KF_epByziEO0szRfQ9'
+      ..files.add(await http.MultipartFile.fromPath('file', file.path));
     try {
-      if (type == 'image') {
-        final pickedFile = await picker.pickImage(source: ImageSource.gallery);
-        if (pickedFile != null) {
-          setState(() {
-            imageFile = pickedFile;
-          });
-        }
-      } else if (type == 'video') {
-        final pickedFile = await picker.pickVideo(source: ImageSource.gallery);
-        if (pickedFile != null) {
-          setState(() {
-            videoFile = pickedFile;
-          });
-        }
-      } else if (type == 'audio') {
-        print("Audio picker not implemented.");
+      final response = await request.send();
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final responseBody = await response.stream.bytesToString();
+        final jsonResponse = jsonDecode(responseBody);
+        return jsonResponse['data']['id'];
+      } else {
+        print('File upload failed with status code: ${response.statusCode}');
+        return null;
       }
     } catch (e) {
-      print('Error picking media: $e');
+      print('Error uploading file: $e');
+      return null;
+    }
+  }
+
+  Future<void> pickMedia(String type) async {
+    XFile? pickedFile;
+    if (type == 'image') {
+      pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+      setState(() {
+        imageFile = pickedFile;
+      });
+    } else if (type == 'video') {
+      pickedFile = await _picker.pickVideo(source: ImageSource.gallery);
+      setState(() {
+        videoFile = pickedFile;
+      });
+    }
+  }
+
+  Future<void> pickVoiceFile() async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles(type: FileType.audio);
+    if (result != null) {
+      setState(() {
+        voiceFile = File(result.files.single.path!);
+      });
     }
   }
 
   Future<void> handleSubmit() async {
+    String? imageFileId, videoFileId, voiceFileId; // Declare all file IDs
+
+    if (imageFile != null) {
+      imageFileId = await uploadMediaToDirectus(File(imageFile!.path));
+    }
+    if (videoFile != null) {
+      videoFileId = await uploadMediaToDirectus(File(videoFile!.path));
+    }
+    if (voiceFile != null) {
+      voiceFileId = await uploadMediaToDirectus(voiceFile!);
+    }
+
+    print('Image File ID: $imageFileId');
+    print('Video File ID: $videoFileId');
+    print('Voice File ID: $voiceFileId');
+
     final complaintData = {
       'sub_category': int.parse(widget.subCategory),
       'complaint_type': widget.complaintType,
       'selected_category': widget.selectedCategory,
-      'service_type': widget.serviceType,
+      'Service_type': widget.serviceType,
       'title': widget.title,
       'description': description ?? '',
       'user': userId,
       'governorate_name': selectedGovernorate ?? '',
       'district_name': selectedDistrict ?? '',
       'street_name_or_number': streetNameOrNumber ?? '',
-      'image': imageFile?.path,
-      'video': videoFile?.path,
-      'voice': audioFile?.path,
+      'image': imageFileId,
+      'video': videoFileId,
+      'voice': voiceFileId,
     };
+
+    print('Posting complaintData: $complaintData');
 
     const apiUrl = 'http://157.230.87.143:8055/items/Complaint';
     try {
@@ -220,6 +246,11 @@ class _AddComplaintFormState extends State<AddComplaintForm> {
               ],
             ),
             const SizedBox(height: 16),
+            const Text(
+              'اسم او رقم الشارع',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 8),
             TextField(
               decoration: const InputDecoration(
                 labelText: 'إسم او رقم الشارع',
@@ -230,12 +261,17 @@ class _AddComplaintFormState extends State<AddComplaintForm> {
               },
             ),
             const SizedBox(height: 16),
+            const Text(
+              'اضف صورة / فيديو / تسجيل صوتي',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 8),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                _buildMediaBox(context, Icons.image, 'صورة', () => pickMedia('image')),
-                _buildMediaBox(context, Icons.videocam, 'فيديو', () => pickMedia('video')),
-                _buildMediaBox(context, Icons.mic, 'مذكرة صوتية', () => pickMedia('audio')),
+                _buildMediaBox(context, Icons.image, 'صورة', () => pickMedia('image'), imageFile),
+                _buildMediaBox(context, Icons.videocam, 'فيديو', () => pickMedia('video'), videoFile),
+                _buildMediaBox(context, Icons.mic, 'صوت', pickVoiceFile, voiceFile),
               ],
             ),
             const SizedBox(height: 20),
@@ -251,7 +287,7 @@ class _AddComplaintFormState extends State<AddComplaintForm> {
     );
   }
 
-  Widget _buildMediaBox(BuildContext context, IconData icon, String label, VoidCallback onTap) {
+  Widget _buildMediaBox(BuildContext context, IconData icon, String label, VoidCallback onTap, dynamic file) {
     return GestureDetector(
       onTap: onTap,
       child: Column(
@@ -260,21 +296,14 @@ class _AddComplaintFormState extends State<AddComplaintForm> {
             width: 80,
             height: 80,
             decoration: BoxDecoration(
-              color: const Color(0xFFD9D9D9),
+              color: file != null ? Colors.transparent : Colors.white,
               border: Border.all(color: Colors.grey, width: 1.0),
               borderRadius: BorderRadius.circular(10.0),
             ),
-            child: Icon(
-              icon,
-              color: Colors.grey,
-              size: 40,
-            ),
+            child: Icon(icon, color: Colors.grey, size: 40),
           ),
           const SizedBox(height: 8),
-          Text(
-            label,
-            style: const TextStyle(fontSize: 14),
-          ),
+          Text(label, style: const TextStyle(fontSize: 14)),
         ],
       ),
     );

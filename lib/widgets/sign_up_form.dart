@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../screens/home_page.dart';
 import 'custom_action_button.dart';
@@ -25,11 +26,9 @@ class _SignUpFormState extends State<SignUpForm> {
   String? selectedCommunicationMethod;
   bool isLoading = false;
 
-  // Base API URL
   final String baseUrl = 'http://157.230.87.143:8055/items/Users';
 
   Future<void> handleSignUp() async {
-    // Validate required fields
     if (emailController.text.trim().isEmpty ||
         fullNameController.text.trim().isEmpty ||
         phoneNumberController.text.trim().isEmpty ||
@@ -41,11 +40,11 @@ class _SignUpFormState extends State<SignUpForm> {
       return;
     }
 
-    // Validate password
     if (passwordController.text.trim() != confirmPasswordController.text.trim()) {
       _showMessage('خطأ', 'كلمات المرور غير متطابقة');
       return;
     }
+
     if (passwordController.text.trim().length < 6) {
       _showMessage('خطأ', 'كلمة المرور يجب أن تكون أطول من 6 أحرف');
       return;
@@ -56,7 +55,6 @@ class _SignUpFormState extends State<SignUpForm> {
     });
 
     try {
-      // Check if the email is already used
       final emailCheckResponse = await http.get(
         Uri.parse('$baseUrl?filter[email][_eq]=${emailController.text.trim()}'),
         headers: {'Content-Type': 'application/json'},
@@ -79,7 +77,6 @@ class _SignUpFormState extends State<SignUpForm> {
         return;
       }
 
-      // Make API request to create a new user
       final response = await http.post(
         Uri.parse(baseUrl),
         headers: {'Content-Type': 'application/json'},
@@ -136,6 +133,7 @@ class _SignUpFormState extends State<SignUpForm> {
 
   @override
   Widget build(BuildContext context) {
+    // This is the missing `build` method.
     return Card(
       color: Colors.white,
       elevation: 4,
@@ -147,7 +145,6 @@ class _SignUpFormState extends State<SignUpForm> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const SizedBox(height: 20),
             const Align(
               alignment: Alignment.centerRight,
               child: Text(
@@ -224,6 +221,74 @@ class _SignUpFormState extends State<SignUpForm> {
                       ),
                     )
                   : null,
+            ),
+            const SizedBox(height: 20),
+            Row(
+              children: [
+                const Expanded(
+                  child: Divider(color: Colors.grey, thickness: 1),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  child: Text(
+                    'أو',
+                    style: TextStyle(color: Colors.grey.shade700, fontSize: 16),
+                  ),
+                ),
+                const Expanded(
+                  child: Divider(color: Colors.grey, thickness: 1),
+                ),
+              ],
+            ),
+            const SizedBox(height: 20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                SizedBox(
+                  width: 60,
+                  height: 60,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      // Handle Facebook login
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      side: BorderSide(color: Colors.grey.shade400),
+                      elevation: 0,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                    child: const FaIcon(
+                      FontAwesomeIcons.facebookF,
+                      color: Colors.blue,
+                      size: 30,
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  width: 60,
+                  height: 60,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      // Handle Google login
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      side: BorderSide(color: Colors.grey.shade400),
+                      elevation: 0,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                    child: const FaIcon(
+                      FontAwesomeIcons.google,
+                      color: Colors.red,
+                      size: 30,
+                    ),
+                  ),
+                ),
+              ],
             ),
           ],
         ),

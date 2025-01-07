@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../services/api_service.dart';
 import '../screens/home_page.dart';
 import '../widgets/custom_action_button.dart';
@@ -23,6 +24,24 @@ class _LoginFormState extends State<LoginForm> {
   final ApiService apiService = ApiService(baseUrl: 'http://157.230.87.143:8055');
 
   bool isLoading = false;
+  bool rememberPassword = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadSavedPassword();
+  }
+
+  Future<void> _loadSavedPassword() async {
+    final prefs = await SharedPreferences.getInstance();
+    final savedPassword = prefs.getString('savedPassword');
+    if (savedPassword != null) {
+      setState(() {
+        passwordController.text = savedPassword;
+        rememberPassword = true;
+      });
+    }
+  }
 
   Future<void> handleLogin() async {
     setState(() {
@@ -40,6 +59,12 @@ class _LoginFormState extends State<LoginForm> {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setBool('isLoggedIn', true);
       await prefs.setInt('userId', userId);
+
+      if (rememberPassword) {
+        await prefs.setString('savedPassword', passwordController.text.trim());
+      } else {
+        await prefs.remove('savedPassword');
+      }
 
       if (!mounted) return;
       Navigator.pushReplacement(
@@ -103,6 +128,36 @@ class _LoginFormState extends State<LoginForm> {
               obscureText: true,
               controller: passwordController,
             ),
+            Row(
+              children: [
+                Expanded(
+                  child: Row(
+                    children: [
+                      Checkbox(
+                        value: rememberPassword,
+                        activeColor: const Color(0xFFBA110C),
+                        onChanged: (value) {
+                          setState(() {
+                            rememberPassword = value ?? false;
+                          });
+                        },
+                      ),
+                      const Text('تذكر كلمة المرور'),
+                    ],
+                  ),
+                ),
+                GestureDetector(
+                  onTap: widget.onForgotPassword,
+                  child: const Text(
+                    'هل نسيت كلمة المرور؟',
+                    style: TextStyle(
+                      color: Color(0xFFBA110C),
+                      decoration: TextDecoration.underline,
+                    ),
+                  ),
+                ),
+              ],
+            ),
             CustomActionButton(
               title: isLoading ? '' : 'تسجيل الدخول',
               titleSize: 16,
@@ -111,6 +166,78 @@ class _LoginFormState extends State<LoginForm> {
               child: isLoading
                   ? const CircularProgressIndicator(color: Colors.white)
                   : null,
+            ),
+            const SizedBox(height: 20),
+            Row(
+              children: [
+                const Expanded(
+                  child: Divider(color: Colors.grey, thickness: 1),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  child: Text(
+                    'أو',
+                    style: TextStyle(color: Colors.grey.shade700, fontSize: 16),
+                  ),
+                ),
+                const Expanded(
+                  child: Divider(color: Colors.grey, thickness: 1),
+                ),
+              ],
+            ),
+            const SizedBox(height: 20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                // Facebook Button
+                SizedBox(
+                  width: 60, // Cube dimensions
+                  height: 60,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      // Handle Facebook login
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      side: BorderSide(color: Colors.grey.shade400),
+                      elevation: 0,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                    child: const FaIcon(
+                      FontAwesomeIcons.facebookF,
+                      color: Colors.blue,
+                      size: 30,
+                    ),
+                  ),
+                ),
+                // Google Button
+                SizedBox(
+                  width: 60, // Cube dimensions
+                  height: 60,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      // Handle Google login
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      side: BorderSide(color: Colors.grey.shade400),
+                      elevation: 0,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                    child: const Center(
+                      child: FaIcon(
+                        FontAwesomeIcons.google, // Google icon
+                        color: Colors.red,
+                        size: 30,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ],
         ),
