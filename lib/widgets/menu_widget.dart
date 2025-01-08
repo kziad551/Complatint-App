@@ -24,6 +24,11 @@ class MenuWidget extends StatelessWidget {
     );
   }
 
+  Future<int?> getUserId() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getInt('userId'); // Retrieve user ID
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -78,11 +83,20 @@ class MenuWidget extends StatelessWidget {
             icon: Icons.star,
             text: 'قيم نوع مستوى الخدمة',
             isActive: currentPage == 'rate_service',
-            onTap: () {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => const ComplaintRatingPage()),
-              );
+            onTap: () async {
+              final userId = await getUserId();
+              if (userId != null) {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ComplaintRatingPage(userId: userId),
+                  ),
+                );
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('User not logged in')),
+                );
+              }
             },
           ),
           _buildMenuRow(

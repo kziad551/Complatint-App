@@ -23,7 +23,6 @@ class _ComplaintListState extends State<ComplaintList> {
   }
 
   Future<void> loadUserData() async {
-    // Replace with your logic to get the logged-in user's ID
     userId = 2; // Example user ID
     await fetchComplaints();
   }
@@ -50,7 +49,6 @@ class _ComplaintListState extends State<ComplaintList> {
             final complaintData = jsonDecode(complaintResponse.body)['data'];
             final statusNameData = jsonDecode(statusNameResponse.body)['data'];
 
-            // Extract and format the date
             String formattedDate = 'Unknown Date';
             if (complaintData['date'] != null) {
               final parsedDate = DateTime.parse(complaintData['date']);
@@ -59,9 +57,11 @@ class _ComplaintListState extends State<ComplaintList> {
             }
 
             complaints.add({
+              'id': complaintData['id'],
               'name': complaintData['title'] ?? 'Unknown Complaint',
               'date': formattedDate,
               'status': statusNameData['name'] ?? 'Unknown Status',
+              'statusColor': getStatusColor(statusNameData['name'] ?? ''),
             });
           }
         }
@@ -75,18 +75,22 @@ class _ComplaintListState extends State<ComplaintList> {
     }
   }
 
-  Color getStatusColor(String status) {
-    switch (status) {
-      case 'تمت المراجعة':
-        return const Color(0xFF48EF00);
-      case 'ملغاة':
-        return const Color(0xFFEF3800);
-      case 'قيد المراجعة':
-        return const Color(0xFFFFCD03);
-      default:
-        return Colors.grey;
-    }
+Color getStatusColor(String? status) {
+  if (status == null) {
+    return Colors.grey; // Default color for null status
   }
+
+  switch (status) {
+    case 'تمت المراجعة':
+      return const Color(0xFF48EF00); // Green
+    case 'ملغاة':
+      return const Color(0xFFEF3800); // Red
+    case 'قيد المراجعة':
+      return const Color(0xFFFFCD03); // Yellow
+    default:
+      return Colors.grey; // Default color for unknown status
+  }
+}
 
   @override
   Widget build(BuildContext context) {
@@ -129,10 +133,11 @@ class _ComplaintListState extends State<ComplaintList> {
               padding: const EdgeInsets.only(bottom: 10.0),
               child: _buildComplaintRow(
                 context,
+                complaint['id'],
                 complaint['name'],
                 complaint['date'],
                 complaint['status'],
-                getStatusColor(complaint['status']),
+                complaint['statusColor'],
               ),
             )),
           ],
@@ -143,6 +148,7 @@ class _ComplaintListState extends State<ComplaintList> {
 
   Widget _buildComplaintRow(
     BuildContext context,
+    int complaintId,
     String complaint,
     String date,
     String status,
@@ -154,8 +160,7 @@ class _ComplaintListState extends State<ComplaintList> {
           context,
           MaterialPageRoute(
             builder: (context) => ComplaintListDetails(
-              complaintTitle: complaint,
-              date: date,
+              complaintId: complaintId,
               status: status,
               statusColor: statusColor,
             ),
@@ -171,7 +176,6 @@ class _ComplaintListState extends State<ComplaintList> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            // Status Button on the left
             Container(
               width: 120,
               padding: const EdgeInsets.symmetric(vertical: 6),
@@ -189,7 +193,6 @@ class _ComplaintListState extends State<ComplaintList> {
                 ),
               ),
             ),
-            // Title and Date on the right
             Column(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [

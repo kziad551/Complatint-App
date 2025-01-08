@@ -1,21 +1,81 @@
-import 'package:complaint_application/widgets/custom_action_button.dart';
-import 'package:complaint_application/widgets/custom_input_field.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 import '../widgets/custom_layout_page.dart';
 
-class ComplaintListDetails extends StatelessWidget {
-  final String complaintTitle;
-  final String date;
+class ComplaintListDetails extends StatefulWidget {
+  final int complaintId;
   final String status;
   final Color statusColor;
 
   const ComplaintListDetails({
     Key? key,
-    required this.complaintTitle,
-    required this.date,
+    required this.complaintId,
     required this.status,
     required this.statusColor,
   }) : super(key: key);
+
+  @override
+  _ComplaintListDetailsState createState() => _ComplaintListDetailsState();
+}
+
+class _ComplaintListDetailsState extends State<ComplaintListDetails> {
+  String complaintTitle = '';
+  String description = '';
+  String subCategoryName = '';
+  String date = '';
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    fetchComplaintDetails();
+  }
+
+  Future<void> fetchComplaintDetails() async {
+    try {
+      final response = await http.get(
+        Uri.parse('http://157.230.87.143:8055/items/Complaint/${widget.complaintId}'),
+      );
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body)['data'];
+
+        // Fetch subcategory name
+        String subCategoryNameTemp = 'غير محدد';
+        if (data['sub_category'] != null) {
+          final subCategoryResponse = await http.get(
+            Uri.parse('http://157.230.87.143:8055/items/SubCategory/${data['sub_category']}'),
+          );
+          if (subCategoryResponse.statusCode == 200) {
+            subCategoryNameTemp = jsonDecode(subCategoryResponse.body)['data']['name'] ?? 'غير محدد';
+          }
+        }
+
+        setState(() {
+          complaintTitle = data['title'] ?? 'عنوان غير محدد';
+          description = data['description'] ?? 'لا يوجد وصف';
+          subCategoryName = subCategoryNameTemp;
+          date = data['date'] != null
+              ? formatDate(data['date'])
+              : 'غير محدد';
+          isLoading = false;
+        });
+      } else {
+        throw Exception('Failed to load complaint details');
+      }
+    } catch (e) {
+      setState(() {
+        isLoading = false;
+      });
+      print("Error fetching complaint details: $e");
+    }
+  }
+
+  String formatDate(String rawDate) {
+    final parsedDate = DateTime.parse(rawDate);
+    return "${parsedDate.year}-${parsedDate.month.toString().padLeft(2, '0')}-${parsedDate.day.toString().padLeft(2, '0')}";
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,6 +92,10 @@ class ComplaintListDetails extends StatelessWidget {
   }
 
   Widget _card(BuildContext context) {
+    if (isLoading) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
     return Card(
       color: Colors.white,
       elevation: 4,
@@ -42,40 +106,16 @@ class ComplaintListDetails extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 32),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Text(
-              'تفاصيل $complaintTitle',
-              style: const TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 20),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _buildReadOnlyInput('عنوان الشكوى', 'لوريم إيبسوم'),
-                  const SizedBox(height: 12),
-                  _buildReadOnlyInput('الوصف',
-                      'لوريم إيبسوم هو ببساطة نص شكلي (بمعنى أن الغاية هي الشكل وليس المحتوى) ويُستخدم في صناعات المطابع ودور النشر.'),
-                  const SizedBox(height: 12),
-                  _buildReadOnlyInput('الفئة', complaintTitle),
-                  const SizedBox(height: 12),
-                  _buildReadOnlyInput('التاريخ', date),
-                  const SizedBox(height: 12),
-                  const Text(
-                    'الحالة',
-                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(height: 8),
-                  _buildStatusButton(status, statusColor),
-                ],
-              ),
-            ),
+            _buildReadOnlyInput('عنوان الشكوى', complaintTitle),
+            const SizedBox(height: 12),
+            _buildReadOnlyInput('الوصف', description),
+            const SizedBox(height: 12),
+            _buildReadOnlyInput('الفئة', subCategoryName),
+            const SizedBox(height: 12),
+            _buildReadOnlyInput('التاريخ', date),
+            const SizedBox(height: 12),
+            _buildStatusButton(widget.status, widget.statusColor),
             const SizedBox(height: 32),
             const Divider(color: Colors.grey),
             const SizedBox(height: 32),
@@ -104,38 +144,7 @@ class ComplaintListDetails extends StatelessWidget {
             const SizedBox(height: 32),
             const Divider(color: Colors.grey),
             const SizedBox(height: 32),
-            const CustomInputField(label: 'أضف تعليق', hint: 'اكتب تعليقك هنا'),
-            const SizedBox(height: 20),
-            const Text(
-              'أعطي تقييم للشكاوي',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 8),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.grey, width: 1),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: List.generate(5, (index) {
-                  return const Icon(
-                    Icons.star_border,
-                    size: 40,
-                    color: Color(0xFFFFCD03),
-                  );
-                }),
-              ),
-            ),
-            const SizedBox(height: 20),
-            CustomActionButton(
-              title: "إدخال",
-              titleSize: 16,
-              backgroundColor: const Color(0xFFBA110C),
-              onPressed: () {},
-              isFull: false,
-            ),
+            _buildCommentSection(),
           ],
         ),
       ),
@@ -184,6 +193,44 @@ class ComplaintListDetails extends StatelessWidget {
           color: Colors.white,
         ),
       ),
+    );
+  }
+
+  Widget _buildCommentSection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          'أضف تعليق',
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(height: 8),
+        TextFormField(
+          maxLines: 4,
+          decoration: InputDecoration(
+            hintText: 'اكتب تعليقك هنا',
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+            ),
+          ),
+        ),
+        const SizedBox(height: 20),
+        const Text(
+          'أعطي تقييم للشكاوي',
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(height: 8),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: List.generate(5, (index) {
+            return const Icon(
+              Icons.star_border,
+              size: 40,
+              color: Color(0xFFFFCD03),
+            );
+          }),
+        ),
+      ],
     );
   }
 }

@@ -1,26 +1,119 @@
-import 'package:complaint_application/widgets/custom_action_button.dart';
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import '../widgets/custom_action_button.dart';
 import '../widgets/custom_layout_page.dart';
 
 class ComplaintRatingPage extends StatefulWidget {
-  const ComplaintRatingPage({super.key});
+  final int userId; // Logged-in user ID
+
+  const ComplaintRatingPage({super.key, required this.userId});
 
   @override
   _ComplaintRatingPageState createState() => _ComplaintRatingPageState();
 }
 
 class _ComplaintRatingPageState extends State<ComplaintRatingPage> {
-  String? activeComplaint; // Currently selected complaint
-  int selectedStars = 0; // Star rating tracker
-  bool isRatingEnabled = false; // Enable/disable button
+  List<Map<String, dynamic>> complaints = [];
+  String? selectedComplaintId;
+  String? selectedComplaintTitle;
+  int selectedStars = 0;
   TextEditingController commentController = TextEditingController();
+  bool isLoading = true;
+  bool isSubmitting = false;
 
-  // List of complaints
-  final List<String> complaints = [
-    'شكوة ١ - انقطاع المياه',
-    'شكوة ٢ - تلوث المياه',
-    'شكوة ٣ - تسرب المياه',
-  ];
+  @override
+  void initState() {
+    super.initState();
+    fetchUserComplaints();
+  }
+
+  // Fetch complaints for the logged-in user
+  Future<void> fetchUserComplaints() async {
+    try {
+      final response = await http.get(
+        Uri.parse('http://157.230.87.143:8055/items/Complaint?filter[user][_eq]=${widget.userId}'),
+      );
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body)['data'];
+        setState(() {
+          complaints = data
+              .map<Map<String, dynamic>>((complaint) => {
+                    'id': complaint['id'].toString(),
+                    'title': complaint['title'] ?? 'No Title',
+                  })
+              .toList();
+          isLoading = false;
+        });
+      } else {
+        throw Exception('Failed to fetch complaints');
+      }
+    } catch (e) {
+      setState(() {
+        isLoading = false;
+      });
+      print("Error fetching complaints: $e");
+    }
+  }
+
+  // Submit the rating and comment to the API
+  Future<void> submitRating() async {
+    if (selectedComplaintId == null || selectedStars == 0) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('يرجى اختيار شكوى وتحديد تقييم.'),
+        ),
+      );
+      return;
+    }
+
+    setState(() {
+      isSubmitting = true;
+    });
+
+    try {
+      final response = await http.post(
+        Uri.parse('http://157.230.87.143:8055/items/Complaint_ratings'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({
+          'Complaint': int.parse(selectedComplaintId!),
+          'rating_value': selectedStars.toString(),
+          'comment': commentController.text.trim(),
+          'user': widget.userId,
+        }),
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('تم إرسال التقييم بنجاح.'),
+          ),
+        );
+
+        setState(() {
+          selectedComplaintId = null;
+          selectedComplaintTitle = null;
+          selectedStars = 0;
+          commentController.clear();
+        });
+      } else {
+        throw Exception('Failed to submit rating');
+      }
+    } catch (e) {
+      print("Error submitting rating: $e");
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('حدث خطأ أثناء إرسال التقييم.'),
+        ),
+      );
+    } finally {
+      setState(() {
+        isSubmitting = false;
+      });
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -28,197 +121,149 @@ class _ComplaintRatingPageState extends State<ComplaintRatingPage> {
       textDirection: TextDirection.rtl,
       child: CustomLayoutPage(
         currentPage: "rate_service",
-        cardContent: _card(
-          context,
-          activeComplaint,
-          complaints,
-          (value) {
-            setState(() {
-              activeComplaint = value;
-              selectedStars = 0;
-              isRatingEnabled = false;
-            });
-          },
-          (int index) {
-            setState(() {
-              selectedStars = index + 1;
-              isRatingEnabled = true;
-            });
-          },
-          selectedStars,
-          commentController,
-          isRatingEnabled,
-        ),
+        cardContent: _card(context),
         containFooter: true,
         containLogo: true,
         containToggle: false,
       ),
     );
   }
-}
 
-Widget _card(
-    BuildContext context,
-    String? activeComplaint,
-    List<String> complaints,
-    dynamic onChanged,
-    dynamic onPressed,
-    int selectedStars,
-    TextEditingController commentController,
-    bool isRatingEnabled) {
-  return Card(
-    color: Colors.white,
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(12.0),
-    ),
-    child: Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Main Title
-            const Center(
-              child: Text(
-                'قيم نوع مستوى الخدمة',
-                style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+  Widget _card(BuildContext context) {
+    if (isLoading) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
+    return Card(
+      color: Colors.white,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12.0),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Main Title
+              const Center(
+                child: Text(
+                  'قيم نوع مستوى الخدمة',
+                  style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+                ),
               ),
-            ),
-            const SizedBox(height: 20),
+              const SizedBox(height: 20),
 
-            // Small Title
-            const Text(
-              'أعطي تقييم للشكاوي',
-              style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 8),
-
-            // Custom Dropdown with List
-            Container(
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.grey),
-                borderRadius: BorderRadius.circular(8.0),
+              // Dropdown to select a complaint
+              const Text(
+                'أعطي تقييم للشكاوي',
+                style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
               ),
-              child: DropdownButtonHideUnderline(
-                child: DropdownButton<String>(
-                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                  borderRadius: BorderRadius.circular(8.0),
-                  style: const TextStyle(fontSize: 16),
-                  isExpanded: true,
-                  value: activeComplaint,
-                  hint: const Text(
-                    'قائمة الشكاوى',
-                    style: TextStyle(color: Colors.grey),
+              const SizedBox(height: 8),
+              DropdownButtonFormField<String>(
+                value: selectedComplaintId,
+                items: complaints.map((complaint) {
+                  return DropdownMenuItem<String>(
+                    value: complaint['id'],
+                    child: Align(
+                      alignment: Alignment.centerRight,
+                      child: Text(
+                        complaint['title'],
+                        style: const TextStyle(color: Colors.black),
+                      ),
+                    ),
+                  );
+                }).toList(),
+                onChanged: (value) {
+                  setState(() {
+                    selectedComplaintId = value;
+                    selectedComplaintTitle = complaints
+                        .firstWhere((complaint) => complaint['id'] == value)['title'];
+                    selectedStars = 0; // Reset rating
+                  });
+                },
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
                   ),
-                  dropdownColor: Colors.white,
-                  icon: const Icon(
-                    Icons.arrow_drop_down,
-                    color: Colors.black54,
+                  hintText: 'قائمة الشكاوى',
+                ),
+              ),
+              const SizedBox(height: 20),
+
+              // Display selected complaint
+              if (selectedComplaintTitle != null)
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(12.0),
+                  decoration: BoxDecoration(
+                    color: const Color(0xC6FC4B4B),
+                    borderRadius: BorderRadius.circular(8.0),
                   ),
-                  items: complaints.map((String complaint) {
-                    return DropdownMenuItem<String>(
-                      value: complaint,
-                      child: Align(
-                        alignment: Alignment.centerRight,
-                        child: Text(
-                          complaint,
-                          style: const TextStyle(color: Colors.black),
-                        ),
+                  child: Text(
+                    selectedComplaintTitle!,
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              const SizedBox(height: 20),
+
+              // Rating stars
+              if (selectedComplaintTitle != null)
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: List.generate(5, (index) {
+                    return IconButton(
+                      onPressed: () {
+                        setState(() {
+                          selectedStars = index + 1;
+                        });
+                      },
+                      icon: Icon(
+                        index < selectedStars ? Icons.star : Icons.star_border,
+                        color: const Color(0xFFFFCD03),
+                        size: 40,
                       ),
                     );
-                  }).toList(),
-                  onChanged: onChanged,
+                  }),
+                ),
+              const SizedBox(height: 20),
+
+              // Comment input
+              const Text(
+                'تعليق',
+                style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 10),
+              TextField(
+                controller: commentController,
+                maxLines: 4,
+                style: const TextStyle(fontSize: 16),
+                decoration: InputDecoration(
+                  hintText: 'اكتب تعليقك هنا...',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
                 ),
               ),
-            ),
-            const SizedBox(height: 20),
+              const SizedBox(height: 20),
 
-            // Rating Section
-            if (activeComplaint != null)
-              Column(
-                children: [
-                  Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.all(12.0),
-                    decoration: BoxDecoration(
-                      color: const Color(0xC6FC4B4B),
-                      borderRadius: BorderRadius.circular(8.0),
-                    ),
-                    child: Text(
-                      activeComplaint,
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  // Star Rating Section
-                  Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey, width: 1),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: List.generate(5, (index) {
-                        return IconButton(
-                          onPressed: () {
-                            onPressed(index);
-                          },
-                          icon: Icon(
-                            index < selectedStars
-                                ? Icons.star
-                                : Icons.star_border,
-                            color: const Color(0xFFFFCD03),
-                            size: 40,
-                          ),
-                        );
-                      }),
-                    ),
-                  ),
-                ],
+              // Submit button
+              CustomActionButton(
+                title: "إضافة تعليق",
+                titleSize: 16,
+                backgroundColor: const Color(0xFFBA110C),
+                onPressed: selectedComplaintId != null && selectedStars > 0 && !isSubmitting
+                    ? submitRating
+                    : null,
               ),
-            const SizedBox(height: 20),
-
-            // Comment Section
-            const Text(
-              'تعليق',
-              style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 10),
-            TextField(
-              controller: commentController,
-              maxLines: 4,
-              style: const TextStyle(fontSize: 16),
-              decoration: InputDecoration(
-                hintText: 'أدخل الفئة',
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8.0),
-                ),
-              ),
-            ),
-            const SizedBox(height: 20),
-            CustomActionButton(
-              title: "إضافة تعليق",
-              titleSize: 16,
-              backgroundColor: const Color(0xFFBA110C),
-              onPressed: isRatingEnabled
-                  ? () {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('تم إرسال التقييم بنجاح'),
-                        ),
-                      );
-                    }
-                  : null,
-            ),
-          ],
+            ],
+          ),
         ),
       ),
-    ),
-  );
+    );
+  }
 }
