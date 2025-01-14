@@ -123,7 +123,7 @@ class _ComplaintFormCatState extends State<ComplaintFormCat> {
                           setState(() {
                             selectedSubCategoryId = subCategory['id'];
                           });
-                          print('Navigating to ziad ddComplaintForm with service_type: ${widget.serviceType}');
+                
                         Navigator.push(
                           context,
                           MaterialPageRoute(

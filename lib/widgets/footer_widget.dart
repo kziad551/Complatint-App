@@ -79,7 +79,7 @@ class FooterWidget extends StatelessWidget {
             child: Container(
               alignment: Alignment.center,
               child: const Text(
-                "giz",
+                "",
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 32,
