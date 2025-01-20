@@ -32,7 +32,7 @@ class _ComplaintRatingPageState extends State<ComplaintRatingPage> {
   Future<void> fetchUserComplaints() async {
     try {
       final response = await http.get(
-        Uri.parse('http://157.230.87.143:8055/items/Complaint?filter[user][_eq]=${widget.userId}'),
+        Uri.parse('https://complaint.top-wp.com//items/Complaint?filter[user][_eq]=${widget.userId}'),
       );
 
       if (response.statusCode == 200) {
@@ -74,7 +74,7 @@ class _ComplaintRatingPageState extends State<ComplaintRatingPage> {
 
     try {
       final response = await http.post(
-        Uri.parse('http://157.230.87.143:8055/items/Complaint_ratings'),
+        Uri.parse('https://complaint.top-wp.com/items/Complaint_ratings'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
           'Complaint': int.parse(selectedComplaintId!),

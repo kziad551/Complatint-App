@@ -25,7 +25,7 @@ class _HomePageState extends State<HomePage> {
             isMainPage = value;
           });
         },
-        labelTabOne: 'صفحة رئيسية',
+        labelTabOne: 'الصفحة الرئيسية', // Updated term here
         labelTabTwo: 'من نحن',
         stateActive: isMainPage,
         containFooter: true,
@@ -51,13 +51,12 @@ class _HomePageState extends State<HomePage> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               const Text(
-                'صفحة رئيسية',
+                'الصفحة الرئيسية', // Updated term here
                 style: TextStyle(
                   fontSize: 28,
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              // const SizedBox(height: 100),
               CustomActionButton(
                 title: 'إضافة شكوى',
                 titleSize: 16,

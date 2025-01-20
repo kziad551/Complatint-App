@@ -37,7 +37,7 @@ class _AddComplaintFormState extends State<AddComplaintForm> {
   String? streetNameOrNumber;
   XFile? imageFile;
   XFile? videoFile;
-  File? voiceFile; // Voice file picker
+  File? voiceFile;
   int? userId;
 
   final ImagePicker _picker = ImagePicker();
@@ -45,7 +45,37 @@ class _AddComplaintFormState extends State<AddComplaintForm> {
   final Map<String, List<String>> governorateDistricts = {
     'بغداد': ['الرصافة', 'الكرخ', 'مدينة الصدر', 'الشعلة'],
     'البصرة': ['الزبير', 'القرنة', 'الفاو', 'أم قصر', 'شط العرب'],
+    // Add more governorates and districts as needed
   };
+
+  final List<String> iraqiGovernorates = [
+    'بغداد',
+    'نينوى',
+    'البصرة',
+    'الأنبار',
+    'السليمانية',
+    'أربيل',
+    'دهوك',
+    'ديالى',
+    'كربلاء',
+    'النجف',
+    'بابل',
+    'واسط',
+    'ذي قار',
+    'ميسان',
+    'القادسية',
+    'صلاح الدين',
+    'كركوك',
+    'المثنى',
+  ];
+
+  final List<String> complaintOptions = [
+    'تسرب المياه',
+    'عدم وجود مياه',
+    'ضعف ضغط المياه',
+    'مشاكل في الفواتير',
+    'أخرى',
+  ];
 
   @override
   void initState() {
@@ -61,7 +91,7 @@ class _AddComplaintFormState extends State<AddComplaintForm> {
   }
 
   Future<String?> uploadMediaToDirectus(File file) async {
-    const apiUrl = 'http://157.230.87.143:8055/files';
+    const apiUrl = 'https://complaint.top-wp.com/files';
     final request = http.MultipartRequest('POST', Uri.parse(apiUrl))
       ..headers['Authorization'] = 'Bearer b5vPGIUKQ6KmC7KF_epByziEO0szRfQ9'
       ..files.add(await http.MultipartFile.fromPath('file', file.path));
@@ -106,7 +136,7 @@ class _AddComplaintFormState extends State<AddComplaintForm> {
   }
 
   Future<void> handleSubmit() async {
-    String? imageFileId, videoFileId, voiceFileId; // Declare all file IDs
+    String? imageFileId, videoFileId, voiceFileId;
 
     if (imageFile != null) {
       imageFileId = await uploadMediaToDirectus(File(imageFile!.path));
@@ -117,10 +147,6 @@ class _AddComplaintFormState extends State<AddComplaintForm> {
     if (voiceFile != null) {
       voiceFileId = await uploadMediaToDirectus(voiceFile!);
     }
-
-    print('Image File ID: $imageFileId');
-    print('Video File ID: $videoFileId');
-    print('Voice File ID: $voiceFileId');
 
     final complaintData = {
       'sub_category': int.parse(widget.subCategory),
@@ -138,9 +164,7 @@ class _AddComplaintFormState extends State<AddComplaintForm> {
       'voice': voiceFileId,
     };
 
-    print('Posting complaintData: $complaintData');
-
-    const apiUrl = 'http://157.230.87.143:8055/items/Complaint';
+    const apiUrl = 'https://complaint.top-wp.com/items/Complaint';
     try {
       final response = await http.post(
         Uri.parse(apiUrl),
@@ -196,55 +220,83 @@ class _AddComplaintFormState extends State<AddComplaintForm> {
           children: [
             Center(
               child: Text(
-                'تسجيل شكوى عن ${widget.title}',
+                'تقديم شكوى عن ${widget.title}',
                 style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
             ),
             const SizedBox(height: 20),
-            TextField(
+            DropdownButtonFormField<String>(
               decoration: const InputDecoration(
-                labelText: 'ما هي شكواك',
+                labelText: 'نوع الشكوى',
                 border: OutlineInputBorder(),
               ),
-              onChanged: (value) {
-                description = value;
+              items: complaintOptions.map((String option) {
+                return DropdownMenuItem<String>(
+                  value: option,
+                  child: Text(option),
+                );
+              }).toList(),
+              onChanged: (String? newValue) {
+                setState(() {
+                  description = newValue;
+                });
               },
             ),
             const SizedBox(height: 16),
-            Row(
-              children: [
-                Expanded(
-                  child: CustomDropdownField(
-                    label: 'إسم المحافظة',
-                    hint: '',
-                    items: governorateDistricts.keys.toList(),
-                    selectedItem: selectedGovernorate,
-                    onChanged: (value) {
-                      setState(() {
-                        selectedGovernorate = value;
-                        selectedDistrict = null;
-                      });
-                    },
-                  ),
-                ),
-                const SizedBox(width: 20),
-                Expanded(
-                  child: CustomDropdownField(
-                    label: 'إسم القضاء',
-                    hint: '',
-                    items: selectedGovernorate != null
-                        ? governorateDistricts[selectedGovernorate] ?? []
-                        : [],
-                    selectedItem: selectedDistrict,
-                    onChanged: (value) {
-                      setState(() {
-                        selectedDistrict = value;
-                      });
-                    },
-                  ),
-                ),
-              ],
-            ),
+Row(
+  children: [
+    Expanded(
+      child: DropdownButtonFormField<String>(
+        decoration: const InputDecoration(
+          labelText: 'إسم المحافظة',
+          border: OutlineInputBorder(),
+        ),
+        value: selectedGovernorate,
+        items: iraqiGovernorates.map((String governorate) {
+          return DropdownMenuItem<String>(
+            value: governorate,
+            child: Text(governorate),
+          );
+        }).toList(),
+        onChanged: (String? newValue) {
+          setState(() {
+            selectedGovernorate = newValue;
+            selectedDistrict = null; // Reset district when governorate changes
+          });
+        },
+      ),
+    ),
+    const SizedBox(width: 20),
+    Expanded(
+      child: DropdownButtonFormField<String>(
+        decoration: const InputDecoration(
+          labelText: 'إسم القضاء',
+          border: OutlineInputBorder(),
+        ),
+        value: selectedDistrict,
+        items: selectedGovernorate != null
+            ? (governorateDistricts[selectedGovernorate!] ?? [])
+                .map((String district) {
+                return DropdownMenuItem<String>(
+                  value: district,
+                  child: Text(district),
+                );
+              }).toList()
+            : [],
+        onChanged: (String? newValue) {
+          setState(() {
+            selectedDistrict = newValue;
+          });
+        },
+        // Display a placeholder if no governorate is selected
+        hint: selectedGovernorate == null
+            ? const Text('اختر المحافظة')
+            : null,
+      ),
+    ),
+  ],
+),
+
             const SizedBox(height: 16),
             const Text(
               'اسم او رقم الشارع',

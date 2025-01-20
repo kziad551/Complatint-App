@@ -45,7 +45,7 @@ class MenuWidget extends StatelessWidget {
           _buildMenuRow(
             context,
             icon: Icons.home,
-            text: 'صفحة رئيسية',
+            text: 'الصفحة رئيسية',
             isActive: currentPage == 'home_page',
             onTap: () {
               Navigator.pushReplacement(

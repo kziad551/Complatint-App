@@ -35,7 +35,7 @@ class _ComplaintListDetailsState extends State<ComplaintListDetails> {
   Future<void> fetchComplaintDetails() async {
     try {
       final response = await http.get(
-        Uri.parse('http://157.230.87.143:8055/items/Complaint/${widget.complaintId}'),
+        Uri.parse('https://complaint.top-wp.com/items/Complaint/${widget.complaintId}'),
       );
 
       if (response.statusCode == 200) {
@@ -45,7 +45,7 @@ class _ComplaintListDetailsState extends State<ComplaintListDetails> {
         String subCategoryNameTemp = 'غير محدد';
         if (data['sub_category'] != null) {
           final subCategoryResponse = await http.get(
-            Uri.parse('http://157.230.87.143:8055/items/SubCategory/${data['sub_category']}'),
+            Uri.parse('https://complaint.top-wp.com/items/SubCategory/${data['sub_category']}'),
           );
           if (subCategoryResponse.statusCode == 200) {
             subCategoryNameTemp = jsonDecode(subCategoryResponse.body)['data']['name'] ?? 'غير محدد';

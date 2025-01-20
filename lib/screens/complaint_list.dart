@@ -30,7 +30,7 @@ class _ComplaintListState extends State<ComplaintList> {
   Future<void> fetchComplaints() async {
     try {
       final statusResponse = await http.get(
-        Uri.parse('http://157.230.87.143:8055/items/status?filter[user][_eq]=$userId'),
+        Uri.parse('https://complaint.top-wp.com/items/status?filter[user][_eq]=$userId'),
       );
 
       if (statusResponse.statusCode == 200) {
@@ -39,10 +39,10 @@ class _ComplaintListState extends State<ComplaintList> {
         for (var status in statusData) {
           final complaintId = status['complaint'];
           final complaintResponse = await http.get(
-            Uri.parse('http://157.230.87.143:8055/items/Complaint/$complaintId'),
+            Uri.parse('https://complaint.top-wp.com/items/Complaint/$complaintId'),
           );
           final statusNameResponse = await http.get(
-            Uri.parse('http://157.230.87.143:8055/items/Complaint_status/${status['complaint_status']}'),
+            Uri.parse('https://complaint.top-wp.com/tems/Complaint_status/${status['complaint_status']}'),
           );
 
           if (complaintResponse.statusCode == 200 && statusNameResponse.statusCode == 200) {

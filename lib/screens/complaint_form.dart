@@ -14,7 +14,7 @@ class ComplaintForm extends StatefulWidget {
 
 class _ComplaintFormState extends State<ComplaintForm> {
   String? selectedComplaint;
-  String selectedCategory = 'خدمة عامة'; // Default category
+  String selectedCategory = 'الخدمات العامة'; // Updated default category
   List<Map<String, dynamic>> categories = []; // Store fetched categories
 
   @override
@@ -24,7 +24,7 @@ class _ComplaintFormState extends State<ComplaintForm> {
   }
 
   Future<void> fetchCategories() async {
-    const apiUrl = 'http://157.230.87.143:8055/items/Complaint_main_category';
+    const apiUrl = 'https://complaint.top-wp.com/items/Complaint_main_category';
     try {
       final response = await http.get(Uri.parse(apiUrl));
       if (response.statusCode == 200) {
@@ -81,35 +81,27 @@ class _ComplaintFormState extends State<ComplaintForm> {
               children: [
                 _buildCategoryButton(
                   context,
-                  title: 'خدمة عامة',
-                  isSelected: selectedCategory == 'خدمة عامة',
+                  title: 'الخدمات العامة',
+                  isSelected: selectedCategory == 'الخدمات العامة',
                   onPressed: () {
                     setState(() {
-                      selectedCategory = 'خدمة عامة';
+                      selectedCategory = 'الخدمات العامة';
                     });
                   },
                 ),
                 _buildCategoryButton(
                   context,
-                  title: 'مستفيد من الخدمة',
-                  isSelected: selectedCategory == 'مستفيد من الخدمة',
+                  title: 'خدمات فردية',
+                  isSelected: selectedCategory == 'خدمات فردية',
                   onPressed: () {
                     setState(() {
-                      selectedCategory = 'مستفيد من الخدمة';
+                      selectedCategory = 'خدمات فردية';
                     });
                   },
                 ),
               ],
             ),
             const SizedBox(height: 20),
-            const Text(
-              'الفئة',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 10),
             categories.isEmpty
                 ? const Center(child: CircularProgressIndicator())
                 : GridView.builder(
@@ -133,7 +125,6 @@ class _ComplaintFormState extends State<ComplaintForm> {
                           setState(() {
                             selectedComplaint = category['name'];
                           });
-                          print('Navigating to ComplaintFormCat with service_type: $selectedCategory');
                           Navigator.push(
                             context,
                             MaterialPageRoute(

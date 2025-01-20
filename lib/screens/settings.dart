@@ -43,18 +43,18 @@ class _SettingsPageState extends State<SettingsPage> {
 
       if (userId != null) {
         final response = await http.get(
-          Uri.parse('http://157.230.87.143:8055/items/Users/$userId'),
+          Uri.parse('https://complaint.top-wp.com/items/Users/$userId'),
         );
 
         if (response.statusCode == 200) {
           final userData = jsonDecode(response.body)['data'];
           setState(() {
             fullNameController.text = userData['full_name'] ?? '';
-            phoneNumberController.text = userData['phone_number']?.toString() ?? '';
-            nationalIdController.text = userData['national_id_number']?.toString() ?? '';
+            phoneNumberController.text = userData['phone_number'] ?? '';
+            nationalIdController.text = userData['national_id_number'] ?? '';
             communicationMethodController.text = userData['communication_method'] ?? '';
             emailController.text = userData['email'] ?? '';
-            passwordController.text = userData['password'] ?? ''; // Fetch the password
+            passwordController.text = userData['password'] ?? '';
             isLoading = false;
           });
         } else {
@@ -69,60 +69,13 @@ class _SettingsPageState extends State<SettingsPage> {
     }
   }
 
-  // Update user details
-  Future<void> updateUserDetails() async {
-    if (userId == null) return;
-
-    setState(() {
-      isSubmitting = true;
-    });
-
-    final updatedData = {
-      'full_name': fullNameController.text.trim(),
-      'phone_number': phoneNumberController.text.trim(),
-      'national_id_number': nationalIdController.text.trim(),
-      'password': passwordController.text.trim(),
-      'communication_method': communicationMethodController.text.trim(),
-    };
-
-    try {
-      final response = await http.patch(
-        Uri.parse('http://157.230.87.143:8055/items/Users/$userId'),
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode(updatedData),
-      );
-
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('تم تحديث البيانات بنجاح')),
-        );
-
-        setState(() {
-          isEditable = false; // Lock the fields after update
-          obscurePassword = true; // Hide the password again
-        });
-      } else {
-        throw Exception('Failed to update user data');
-      }
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('حدث خطأ أثناء تحديث البيانات')),
-      );
-      print('Error updating user data: $e');
-    } finally {
-      setState(() {
-        isSubmitting = false;
-      });
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Directionality(
       textDirection: TextDirection.rtl,
       child: CustomLayoutPage(
         currentPage: "settings",
-        cardContent: isLoading ? _loadingCard() : _card(),
+        cardContent: isLoading ? _loadingCard() : _settingsContent(),
         containFooter: true,
         containLogo: true,
         containToggle: false,
@@ -134,46 +87,46 @@ class _SettingsPageState extends State<SettingsPage> {
     return const Center(child: CircularProgressIndicator());
   }
 
-  Widget _card() {
-    return Card(
-      color: Colors.white,
-      elevation: 4,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12.0),
+  Widget _settingsContent() {
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+            const Text(
+              'الإعدادات',
+              style: TextStyle(
+                fontSize: 28,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 20),
+            _userInfoSection(),
+            const SizedBox(height: 20),
+            _extraPagesSection(),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _userInfoSection() {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white, // White background for the form
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.2),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
       ),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Title and Edit Button
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text(
-                  'الإعدادات',
-                  style: TextStyle(
-                    fontSize: 28,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                CustomActionButton(
-                  title: isEditable ? "إلغاء التعديل" : "تعديل",
-                  titleSize: 16,
-                  backgroundColor: const Color(0xFFBA110C),
-                  onPressed: () {
-                    setState(() {
-                      isEditable = !isEditable; // Toggle edit mode
-                      obscurePassword = !isEditable; // Show password when editable
-                    });
-                  },
-                  isFull: false,
-                ),
-              ],
-            ),
-            const SizedBox(height: 20),
-
-            // Full Name Field
             CustomInputField(
               label: "الإسم",
               hint: "أدخل الإسم",
@@ -181,8 +134,6 @@ class _SettingsPageState extends State<SettingsPage> {
               controller: fullNameController,
             ),
             const SizedBox(height: 16),
-
-            // Phone Number Field
             CustomInputField(
               label: "الهاتف",
               hint: "أدخل الهاتف",
@@ -190,8 +141,6 @@ class _SettingsPageState extends State<SettingsPage> {
               controller: phoneNumberController,
             ),
             const SizedBox(height: 16),
-
-            // National ID Field
             CustomInputField(
               label: "الرقم الوطني",
               hint: "أدخل الرقم الوطني",
@@ -199,8 +148,6 @@ class _SettingsPageState extends State<SettingsPage> {
               controller: nationalIdController,
             ),
             const SizedBox(height: 16),
-
-            // Communication Method Field
             CustomInputField(
               label: "طريقة التواصل",
               hint: "أدخل طريقة التواصل",
@@ -208,8 +155,6 @@ class _SettingsPageState extends State<SettingsPage> {
               controller: communicationMethodController,
             ),
             const SizedBox(height: 16),
-
-            // Email Field (Always Read-Only)
             CustomInputField(
               label: "البريد الإلكتروني",
               hint: "أدخل البريد الإلكتروني",
@@ -217,8 +162,6 @@ class _SettingsPageState extends State<SettingsPage> {
               controller: emailController,
             ),
             const SizedBox(height: 16),
-
-            // Password Field
             CustomInputField(
               label: "كلمة المرور",
               hint: "أدخل كلمة المرور",
@@ -227,17 +170,72 @@ class _SettingsPageState extends State<SettingsPage> {
               obscureText: obscurePassword,
             ),
             const SizedBox(height: 20),
-
-            // Submit Button
             CustomActionButton(
-              title: isSubmitting ? 'جاري التحديث...' : "تحديث",
+              title: isEditable ? "حفظ" : "تعديل",
               titleSize: 16,
               backgroundColor: const Color(0xFFBA110C),
-              onPressed: isEditable && !isSubmitting ? updateUserDetails : null,
+              onPressed: () {
+                setState(() {
+                  isEditable = !isEditable;
+                  obscurePassword = !isEditable;
+                });
+              },
             ),
           ],
         ),
       ),
     );
   }
+
+Widget _extraPagesSection() {
+  final sections = [
+    {'icon': Icons.language, 'title': "خيارات اللغة"},
+    {'icon': Icons.notifications, 'title': "تفضيلات الإشعارات"},
+    {'icon': Icons.history, 'title': "تاريخ الشكاوى"},
+    {'icon': Icons.rate_review, 'title': "التقييمات والملاحظات"},
+    {'icon': Icons.privacy_tip, 'title': "إعدادات الخصوصية"},
+    {'icon': Icons.help, 'title': "المساعدة والدعم"},
+  ];
+
+  return Container(
+    decoration: BoxDecoration(
+      color: Colors.white, // White background
+      borderRadius: BorderRadius.circular(12),
+      boxShadow: [
+        BoxShadow(
+          color: Colors.grey.withOpacity(0.2),
+          blurRadius: 8,
+          offset: const Offset(0, 2),
+        ),
+      ],
+    ),
+    child: Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: ListView.builder(
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        itemCount: sections.length,
+        itemBuilder: (context, index) {
+          final section = sections[index];
+          return Card(
+            elevation: 0, // Flat card within the white container
+            margin: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
+            child: ListTile(
+              leading: Icon(section['icon'] as IconData, color: const Color(0xFFBA110C)),
+              title: Text(section['title'] as String),
+              trailing: const Icon(Icons.arrow_forward_ios, size: 16, color: Colors.grey),
+              onTap: () {
+                // Handle navigation or action for each item
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('${section['title']} تم الضغط على')),
+                );
+              },
+            ),
+          );
+        },
+      ),
+    ),
+  );
+}
+
 }

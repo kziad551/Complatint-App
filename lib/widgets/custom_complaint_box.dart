@@ -25,14 +25,14 @@ class CustomComplaintBox extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Container(
-            width: (MediaQuery.of(context).size.width / 2) - 44,
-            height: 90, // Adjusted for better spacing
+            width: (MediaQuery.of(context).size.width / 2) - 32,
+            height: 100, // Adjusted height for better spacing
             decoration: BoxDecoration(
               border: Border.all(
                 color: isSelected ? Colors.blue : Colors.grey,
                 width: 2.0,
               ),
-              borderRadius: BorderRadius.circular(8.0),
+              borderRadius: BorderRadius.circular(12.0),
               color: isSelected ? Colors.blue[50] : Colors.white,
             ),
             child: Center(
@@ -57,12 +57,12 @@ class CustomComplaintBox extends StatelessWidget {
               title,
               textAlign: TextAlign.center,
               style: const TextStyle(
-                fontSize: 17, // Increased font size
-                fontWeight: FontWeight.bold, // Bolded text
+                fontSize: 14, // Adjusted font size
+                fontWeight: FontWeight.bold,
                 color: Colors.black,
-                overflow: TextOverflow.ellipsis,
               ),
-              maxLines: 2, // Limits to two lines
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis, // Prevents text clipping
             ),
           ),
         ],
