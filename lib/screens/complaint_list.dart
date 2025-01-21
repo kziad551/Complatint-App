@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 import 'complaint_list_details.dart';
 import '../widgets/custom_layout_page.dart';
 
@@ -23,57 +24,101 @@ class _ComplaintListState extends State<ComplaintList> {
   }
 
   Future<void> loadUserData() async {
-    userId = 2; // Example user ID
-    await fetchComplaints();
-  }
+      final prefs = await SharedPreferences.getInstance();
+      userId = prefs.getInt('userId'); // Retrieve the userId from SharedPreferences
+      if (userId != null) {
+        await fetchComplaints();
+      } else {
+        setState(() {
+          isLoading = false; // Stop loading if no userId is found
+        });
+      }
+    }
 
-  Future<void> fetchComplaints() async {
-    try {
-      final statusResponse = await http.get(
-        Uri.parse('https://complaint.top-wp.com/items/status?filter[user][_eq]=$userId'),
-      );
+    Future<void> fetchComplaints() async {
+      try {
+        // Fetch complaints
+        final complaintResponse = await http.get(
+          Uri.parse(
+              'https://complaint.top-wp.com/items/Complaint?filter[user][_eq]=$userId'),
+        );
 
-      if (statusResponse.statusCode == 200) {
-        final statusData = jsonDecode(statusResponse.body)['data'];
+        if (complaintResponse.statusCode == 200) {
+          final complaintData = jsonDecode(complaintResponse.body)['data'];
 
-        for (var status in statusData) {
-          final complaintId = status['complaint'];
-          final complaintResponse = await http.get(
-            Uri.parse('https://complaint.top-wp.com/items/Complaint/$complaintId'),
+          // Fetch Status_subcategory data
+          final subcategoryResponse = await http.get(
+            Uri.parse('https://complaint.top-wp.com/items/Status_subcategory'),
           );
-          final statusNameResponse = await http.get(
-            Uri.parse('https://complaint.top-wp.com/tems/Complaint_status/${status['complaint_status']}'),
+
+          if (subcategoryResponse.statusCode != 200) {
+            print('Failed to fetch Status_subcategory.');
+            return;
+          }
+
+          final subcategoryData = jsonDecode(subcategoryResponse.body)['data'];
+
+          // Fetch Status_category data
+          final categoryResponse = await http.get(
+            Uri.parse('https://complaint.top-wp.com/items/Status_category'),
           );
 
-          if (complaintResponse.statusCode == 200 && statusNameResponse.statusCode == 200) {
-            final complaintData = jsonDecode(complaintResponse.body)['data'];
-            final statusNameData = jsonDecode(statusNameResponse.body)['data'];
+          if (categoryResponse.statusCode != 200) {
+            print('Failed to fetch Status_category.');
+            return;
+          }
 
+          final categoryData = jsonDecode(categoryResponse.body)['data'];
+
+          // Map Status_category names for quick lookup
+          final Map<int, String> categoryMap = {
+            for (var category in categoryData)
+              category['id']: category['name'] ?? 'Unknown Category'
+          };
+
+          // Process complaints
+          for (var complaint in complaintData) {
             String formattedDate = 'Unknown Date';
-            if (complaintData['date'] != null) {
-              final parsedDate = DateTime.parse(complaintData['date']);
+            if (complaint['date'] != null) {
+              final parsedDate = DateTime.parse(complaint['date']);
               formattedDate =
                   "${parsedDate.year}-${parsedDate.month.toString().padLeft(2, '0')}-${parsedDate.day.toString().padLeft(2, '0')}";
             }
 
+            // Get subcategory and category names
+            final subcategoryId = complaint['status_subcategory'];
+            final subcategory = subcategoryData.firstWhere(
+              (sub) => sub['id'] == subcategoryId,
+              orElse: () => null,
+            );
+
+            String categoryName = 'Unknown Category';
+            if (subcategory != null) {
+              final categoryId = subcategory['status_category'];
+              categoryName = categoryMap[categoryId] ?? 'Unknown Category';
+            }
+
+            // Add complaint data to list
             complaints.add({
-              'id': complaintData['id'],
-              'name': complaintData['title'] ?? 'Unknown Complaint',
+              'id': complaint['id'],
+              'name': complaint['title'] ?? 'Unknown Complaint',
               'date': formattedDate,
-              'status': statusNameData['name'] ?? 'Unknown Status',
-              'statusColor': getStatusColor(statusNameData['name'] ?? ''),
+              // 'status': complaint['status'] ?? 'Unknown Status',
+              'statusColor': getStatusColor(complaint['status']),
+              'category': categoryName, // Include category name
             });
           }
+        } else {
+          print('Failed to fetch complaints. Status code: ${complaintResponse.statusCode}');
         }
+      } catch (e) {
+        print('Error fetching complaints: $e');
+      } finally {
+        setState(() {
+          isLoading = false;
+        });
       }
-    } catch (e) {
-      print('Error fetching complaints: $e');
-    } finally {
-      setState(() {
-        isLoading = false;
-      });
     }
-  }
 
 Color getStatusColor(String? status) {
   if (status == null) {
@@ -136,7 +181,7 @@ Color getStatusColor(String? status) {
                 complaint['id'],
                 complaint['name'],
                 complaint['date'],
-                complaint['status'],
+                complaint['category'],
                 complaint['statusColor'],
               ),
             )),
@@ -151,7 +196,7 @@ Color getStatusColor(String? status) {
     int complaintId,
     String complaint,
     String date,
-    String status,
+    String category,
     Color statusColor,
   ) {
     return GestureDetector(
@@ -161,7 +206,7 @@ Color getStatusColor(String? status) {
           MaterialPageRoute(
             builder: (context) => ComplaintListDetails(
               complaintId: complaintId,
-              status: status,
+              status: category,
               statusColor: statusColor,
             ),
           ),
@@ -185,7 +230,7 @@ Color getStatusColor(String? status) {
               ),
               alignment: Alignment.center,
               child: Text(
-                status,
+                category,
                 style: const TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
