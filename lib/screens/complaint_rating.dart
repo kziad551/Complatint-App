@@ -29,33 +29,66 @@ class _ComplaintRatingPageState extends State<ComplaintRatingPage> {
   }
 
   // Fetch complaints for the logged-in user
-  Future<void> fetchUserComplaints() async {
-    try {
-      final response = await http.get(
-        Uri.parse('https://complaint.top-wp.com//items/Complaint?filter[user][_eq]=${widget.userId}'),
+Future<void> fetchUserComplaints() async {
+  try {
+    // Fetch complaints for the logged-in user
+    final response = await http.get(
+      Uri.parse('https://complaint.top-wp.com/items/Complaint?filter[user][_eq]=${widget.userId}'),
+    );
+
+    if (response.statusCode == 200) {
+      final complaintData = jsonDecode(response.body)['data'];
+
+      // Fetch Status_subcategory data
+      final subcategoryResponse = await http.get(
+        Uri.parse('https://complaint.top-wp.com/items/Status_subcategory'),
       );
 
-      if (response.statusCode == 200) {
-        final data = jsonDecode(response.body)['data'];
-        setState(() {
-          complaints = data
-              .map<Map<String, dynamic>>((complaint) => {
-                    'id': complaint['id'].toString(),
-                    'title': complaint['title'] ?? 'No Title',
-                  })
-              .toList();
-          isLoading = false;
-        });
-      } else {
-        throw Exception('Failed to fetch complaints');
+      if (subcategoryResponse.statusCode != 200) {
+        print('Failed to fetch Status_subcategory.');
+        return;
       }
-    } catch (e) {
+
+      final subcategoryData = jsonDecode(subcategoryResponse.body)['data'];
+
+      // Filter complaints based on Status_category of Status_subcategory
+      final filteredComplaints = complaintData.where((complaint) {
+        final subcategoryId = complaint['status_subcategory'];
+        final subcategory = subcategoryData.firstWhere(
+          (sub) => sub['id'] == subcategoryId,
+          orElse: () => null,
+        );
+        return subcategory != null && subcategory['status_category'] == 5;
+      }).toList();
+
+      // Update state with filtered complaints
       setState(() {
+        complaints = filteredComplaints.map<Map<String, dynamic>>((complaint) {
+          final subcategoryId = complaint['status_subcategory'];
+          final subcategory = subcategoryData.firstWhere(
+            (sub) => sub['id'] == subcategoryId,
+            orElse: () => null,
+          );
+
+          // Formatting the complaint data
+          return {
+            'id': complaint['id'].toString(),
+            'title': complaint['title'] ?? 'No Title',
+            'subcategory': subcategory != null ? subcategory['name'] : 'Unknown Subcategory',
+          };
+        }).toList();
         isLoading = false;
       });
-      print("Error fetching complaints: $e");
+    } else {
+      throw Exception('Failed to fetch complaints');
     }
+  } catch (e) {
+    setState(() {
+      isLoading = false;
+    });
+    print("Error fetching complaints: $e");
   }
+}
 
   // Submit the rating and comment to the API
   Future<void> submitRating() async {

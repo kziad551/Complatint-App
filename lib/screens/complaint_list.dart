@@ -24,118 +24,97 @@ class _ComplaintListState extends State<ComplaintList> {
   }
 
   Future<void> loadUserData() async {
-      final prefs = await SharedPreferences.getInstance();
-      userId = prefs.getInt('userId'); // Retrieve the userId from SharedPreferences
-      if (userId != null) {
-        await fetchComplaints();
-      } else {
-        setState(() {
-          isLoading = false; // Stop loading if no userId is found
-        });
-      }
+    final prefs = await SharedPreferences.getInstance();
+    userId = prefs.getInt('userId'); // Retrieve the userId from SharedPreferences
+    if (userId != null) {
+      await fetchComplaints();
+    } else {
+      setState(() {
+        isLoading = false; // Stop loading if no userId is found
+      });
     }
+  }
 
-    Future<void> fetchComplaints() async {
-      try {
-        // Fetch complaints
-        final complaintResponse = await http.get(
-          Uri.parse(
-              'https://complaint.top-wp.com/items/Complaint?filter[user][_eq]=$userId'),
+  Future<void> fetchComplaints() async {
+    try {
+      // Fetch complaints
+      final complaintResponse = await http.get(
+        Uri.parse(
+            'https://complaint.top-wp.com/items/Complaint?filter[user][_eq]=$userId'),
+      );
+
+      if (complaintResponse.statusCode == 200) {
+        final complaintData = jsonDecode(complaintResponse.body)['data'];
+
+        // Fetch Status_subcategory data
+        final subcategoryResponse = await http.get(
+          Uri.parse('https://complaint.top-wp.com/items/Status_subcategory'),
         );
 
-        if (complaintResponse.statusCode == 200) {
-          final complaintData = jsonDecode(complaintResponse.body)['data'];
-
-          // Fetch Status_subcategory data
-          final subcategoryResponse = await http.get(
-            Uri.parse('https://complaint.top-wp.com/items/Status_subcategory'),
-          );
-
-          if (subcategoryResponse.statusCode != 200) {
-            print('Failed to fetch Status_subcategory.');
-            return;
-          }
-
-          final subcategoryData = jsonDecode(subcategoryResponse.body)['data'];
-
-          // Fetch Status_category data
-          final categoryResponse = await http.get(
-            Uri.parse('https://complaint.top-wp.com/items/Status_category'),
-          );
-
-          if (categoryResponse.statusCode != 200) {
-            print('Failed to fetch Status_category.');
-            return;
-          }
-
-          final categoryData = jsonDecode(categoryResponse.body)['data'];
-
-          // Map Status_category names for quick lookup
-          final Map<int, String> categoryMap = {
-            for (var category in categoryData)
-              category['id']: category['name'] ?? 'Unknown Category'
-          };
-
-          // Process complaints
-          for (var complaint in complaintData) {
-            String formattedDate = 'Unknown Date';
-            if (complaint['date'] != null) {
-              final parsedDate = DateTime.parse(complaint['date']);
-              formattedDate =
-                  "${parsedDate.year}-${parsedDate.month.toString().padLeft(2, '0')}-${parsedDate.day.toString().padLeft(2, '0')}";
-            }
-
-            // Get subcategory and category names
-            final subcategoryId = complaint['status_subcategory'];
-            final subcategory = subcategoryData.firstWhere(
-              (sub) => sub['id'] == subcategoryId,
-              orElse: () => null,
-            );
-
-            String categoryName = 'Unknown Category';
-            if (subcategory != null) {
-              final categoryId = subcategory['status_category'];
-              categoryName = categoryMap[categoryId] ?? 'Unknown Category';
-            }
-
-            // Add complaint data to list
-            complaints.add({
-              'id': complaint['id'],
-              'name': complaint['title'] ?? 'Unknown Complaint',
-              'date': formattedDate,
-              // 'status': complaint['status'] ?? 'Unknown Status',
-              'statusColor': getStatusColor(complaint['status']),
-              'category': categoryName, // Include category name
-            });
-          }
-        } else {
-          print('Failed to fetch complaints. Status code: ${complaintResponse.statusCode}');
+        if (subcategoryResponse.statusCode != 200) {
+          print('Failed to fetch Status_subcategory.');
+          return;
         }
-      } catch (e) {
-        print('Error fetching complaints: $e');
-      } finally {
-        setState(() {
-          isLoading = false;
-        });
+
+        final subcategoryData = jsonDecode(subcategoryResponse.body)['data'];
+
+        // Process complaints
+        for (var complaint in complaintData) {
+          String formattedDate = 'Unknown Date';
+          if (complaint['date'] != null) {
+            final parsedDate = DateTime.parse(complaint['date']);
+            formattedDate =
+                "${parsedDate.year}-${parsedDate.month.toString().padLeft(2, '0')}-${parsedDate.day.toString().padLeft(2, '0')}";
+          }
+
+          // Get subcategory name or default to "استقبال الشكوى"
+          final subcategoryId = complaint['status_subcategory'];
+          final subcategory = subcategoryData.firstWhere(
+            (sub) => sub['id'] == subcategoryId,
+            orElse: () => null,
+          );
+
+          String subcategoryName = subcategory != null && subcategory['name'] != null
+              ? subcategory['name']
+              : 'استقبال الشكوى';
+
+          // Add complaint data to list
+          complaints.add({
+            'id': complaint['id'],
+            'name': complaint['title'] ?? 'Unknown Complaint',
+            'date': formattedDate,
+            'statusColor': getStatusColor(complaint['status']),
+            'subcategory': subcategoryName,
+          });
+        }
+      } else {
+        print('Failed to fetch complaints. Status code: ${complaintResponse.statusCode}');
       }
+    } catch (e) {
+      print('Error fetching complaints: $e');
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
+  Color getStatusColor(String? status) {
+    if (status == null) {
+      return Colors.grey; // Default color for null status
     }
 
-Color getStatusColor(String? status) {
-  if (status == null) {
-    return Colors.grey; // Default color for null status
+    switch (status) {
+      case 'تمت المراجعة':
+        return const Color(0xFF48EF00); // Green
+      case 'ملغاة':
+        return const Color(0xFFEF3800); // Red
+      case 'قيد المراجعة':
+        return const Color(0xFFFFCD03); // Yellow
+      default:
+        return Colors.grey; // Default color for unknown status
+    }
   }
-
-  switch (status) {
-    case 'تمت المراجعة':
-      return const Color(0xFF48EF00); // Green
-    case 'ملغاة':
-      return const Color(0xFFEF3800); // Red
-    case 'قيد المراجعة':
-      return const Color(0xFFFFCD03); // Yellow
-    default:
-      return Colors.grey; // Default color for unknown status
-  }
-}
 
   @override
   Widget build(BuildContext context) {
@@ -181,7 +160,7 @@ Color getStatusColor(String? status) {
                 complaint['id'],
                 complaint['name'],
                 complaint['date'],
-                complaint['category'],
+                complaint['subcategory'],
                 complaint['statusColor'],
               ),
             )),
@@ -196,7 +175,7 @@ Color getStatusColor(String? status) {
     int complaintId,
     String complaint,
     String date,
-    String category,
+    String subcategory,
     Color statusColor,
   ) {
     return GestureDetector(
@@ -206,7 +185,7 @@ Color getStatusColor(String? status) {
           MaterialPageRoute(
             builder: (context) => ComplaintListDetails(
               complaintId: complaintId,
-              status: category,
+              status: subcategory,
               statusColor: statusColor,
             ),
           ),
@@ -230,12 +209,13 @@ Color getStatusColor(String? status) {
               ),
               alignment: Alignment.center,
               child: Text(
-                category,
+                subcategory,
                 style: const TextStyle(
-                  fontSize: 16,
+                  fontSize: 12,
                   fontWeight: FontWeight.bold,
                   color: Colors.white,
                 ),
+                textAlign: TextAlign.center,
               ),
             ),
             Column(
