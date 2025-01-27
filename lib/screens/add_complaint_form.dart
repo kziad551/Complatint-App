@@ -48,26 +48,26 @@ class _AddComplaintFormState extends State<AddComplaintForm> {
     // Add more governorates and districts as needed
   };
 
-  final List<String> iraqiGovernorates = [
-    'بغداد',
-    'نينوى',
-    'البصرة',
-    'الأنبار',
-    'السليمانية',
-    'أربيل',
-    'دهوك',
-    'ديالى',
-    'كربلاء',
-    'النجف',
-    'بابل',
-    'واسط',
-    'ذي قار',
-    'ميسان',
-    'القادسية',
-    'صلاح الدين',
-    'كركوك',
-    'المثنى',
-  ];
+final List<Map<String, String>> iraqiGovernorates = [
+  {'id': '1', 'name': 'بغداد'},
+  {'id': '2', 'name': 'البصرة'},
+  {'id': '3', 'name': 'نينوى'},
+  {'id': '4', 'name': 'ذي قار'},
+  {'id': '5', 'name': 'السليمانية'},
+  {'id': '6', 'name': 'أربيل'},
+  {'id': '7', 'name': 'الأنبار'},
+  {'id': '8', 'name': 'بابل'},
+  {'id': '9', 'name': 'كربلاء'},
+  {'id': '10', 'name': 'دهوك'},
+  {'id': '11', 'name': 'ديالى'},
+  {'id': '12', 'name': 'القادسية'},
+  {'id': '13', 'name': 'المثنى'},
+  {'id': '14', 'name': 'ميسان'},
+  {'id': '15', 'name': 'واسط'},
+  {'id': '16', 'name': 'صلاح الدين'},
+  {'id': '17', 'name': 'كركوك'},
+  {'id': '18', 'name': 'حلبجة'},
+];
 
   final List<String> complaintOptions = [
     'تسرب المياه',
@@ -148,6 +148,16 @@ class _AddComplaintFormState extends State<AddComplaintForm> {
       voiceFileId = await uploadMediaToDirectus(voiceFile!);
     }
 
+    // Fetch the name of the selected governorate
+    String governorateName = '';
+    if (selectedGovernorate != null) {
+      final governorate = iraqiGovernorates.firstWhere(
+        (gov) => gov['id'] == selectedGovernorate,
+        orElse: () => {'id': '', 'name': ''},
+      );
+      governorateName = governorate['name'] ?? '';
+    }
+
     final complaintData = {
       'sub_category': int.parse(widget.subCategory),
       'complaint_type': widget.complaintType,
@@ -156,8 +166,8 @@ class _AddComplaintFormState extends State<AddComplaintForm> {
       'title': widget.title,
       'description': description ?? '',
       'user': userId,
-      'governorate_name': selectedGovernorate ?? '',
-      'district_name': selectedDistrict ?? '',
+      'governorate_name': governorateName ?? '',
+      'district': selectedGovernorate ?? '',
       'street_name_or_number': streetNameOrNumber ?? '',
       'image': imageFileId,
       'video': videoFileId,
@@ -181,6 +191,7 @@ class _AddComplaintFormState extends State<AddComplaintForm> {
           MaterialPageRoute(builder: (context) => const HomePage()),
         );
       } else {
+        print("API Response: ${response.body}");
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('حدث خطأ أثناء تقديم الشكوى')),
         );
@@ -251,11 +262,11 @@ Row(
           labelText: 'إسم المحافظة',
           border: OutlineInputBorder(),
         ),
-        value: selectedGovernorate,
-        items: iraqiGovernorates.map((String governorate) {
+        value: selectedGovernorate, // This should store the governorate ID
+        items: iraqiGovernorates.map((Map<String, String> governorate) {
           return DropdownMenuItem<String>(
-            value: governorate,
-            child: Text(governorate),
+            value: governorate['id'], // Use the ID as the value
+            child: Text(governorate['name'] ?? ''), // Display the name
           );
         }).toList(),
         onChanged: (String? newValue) {
@@ -290,13 +301,13 @@ Row(
         },
         // Display a placeholder if no governorate is selected
         hint: selectedGovernorate == null
-            ? const Text('اختر المحافظة')
+            ? const Text('اختر المحافظة أولاً')
             : null,
       ),
     ),
+  
   ],
 ),
-
             const SizedBox(height: 16),
             const Text(
               'اسم او رقم الشارع',

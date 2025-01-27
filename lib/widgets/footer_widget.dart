@@ -27,9 +27,9 @@ class FooterWidget extends StatelessWidget {
             flex: 1, // Allocate 1/3 of the space
             child: Container(
               alignment: Alignment.center,
-              //child: Image.asset(
-                //'assets/images/app_logo.png',
-              //),
+              // child: Image.asset(
+              //   'assets/images/app_logo.png',
+              // ),
             ),
           ),
 
