@@ -24,16 +24,18 @@ class _ComplaintListDetailsState extends State<ComplaintListDetails> {
   String description = '';
   String subCategoryName = '';
   String date = '';
+  List<Map<String, String>> timeline = []; // Store all status history
   bool isLoading = true;
 
   @override
   void initState() {
     super.initState();
-    fetchComplaintDetails();
+    fetchAndBuildTimeline();
   }
 
-  Future<void> fetchComplaintDetails() async {
+  Future<void> fetchAndBuildTimeline() async {
     try {
+      // Fetch data from API
       final response = await http.get(
         Uri.parse('https://complaint.top-wp.com/items/Complaint/${widget.complaintId}'),
       );
@@ -41,24 +43,28 @@ class _ComplaintListDetailsState extends State<ComplaintListDetails> {
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body)['data'];
 
-        // Fetch subcategory name
-        String subCategoryNameTemp = 'غير محدد';
-        if (data['sub_category'] != null) {
-          final subCategoryResponse = await http.get(
-            Uri.parse('https://complaint.top-wp.com/items/SubCategory/${data['sub_category']}'),
-          );
-          if (subCategoryResponse.statusCode == 200) {
-            subCategoryNameTemp = jsonDecode(subCategoryResponse.body)['data']['name'] ?? 'غير محدد';
-          }
+        // Extract current values
+        final currentStatus = data['status_subcategory']?.toString() ?? 'غير محدد';
+        final currentDate = data['statusDate1'] ?? '';
+
+        // Check if the timeline needs to be updated
+        if (timeline.isEmpty ||
+            timeline.last['status'] != currentStatus ||
+            timeline.last['date'] != currentDate) {
+          setState(() {
+            timeline.add({
+              'status': currentStatus,
+              'date': formatDate(currentDate),
+            });
+          });
         }
 
+        // Update other complaint details
         setState(() {
           complaintTitle = data['title'] ?? 'عنوان غير محدد';
           description = data['description'] ?? 'لا يوجد وصف';
-          subCategoryName = subCategoryNameTemp;
-          date = data['date'] != null
-              ? formatDate(data['date'])
-              : 'غير محدد';
+          subCategoryName = currentStatus;
+          date = currentDate.isNotEmpty ? formatDate(currentDate) : 'غير محدد';
           isLoading = false;
         });
       } else {
@@ -73,6 +79,7 @@ class _ComplaintListDetailsState extends State<ComplaintListDetails> {
   }
 
   String formatDate(String rawDate) {
+    if (rawDate.isEmpty) return 'غير محدد';
     final parsedDate = DateTime.parse(rawDate);
     return "${parsedDate.year}-${parsedDate.month.toString().padLeft(2, '0')}-${parsedDate.day.toString().padLeft(2, '0')}";
   }
@@ -124,24 +131,26 @@ class _ComplaintListDetailsState extends State<ComplaintListDetails> {
               style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text('١٠/١١/٢٠٢٤',
-                    style: TextStyle(fontSize: 16, color: Colors.black)),
-                _buildStatusButton('قيد المراجعة', const Color(0xFFFFCD03)),
-              ],
-            ),
-            const SizedBox(height: 32),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text('٢١/١١/٢٠٢٤',
-                    style: TextStyle(fontSize: 16, color: Colors.black)),
-                _buildStatusButton('تمت المراجعة', const Color(0xFF48EF00)),
-              ],
-            ),
-            const SizedBox(height: 32),
+            ...timeline.map((entry) {
+              return Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        entry['date'] ?? '',
+                        style: const TextStyle(fontSize: 16, color: Colors.black),
+                      ),
+                      _buildStatusButton(
+                        entry['status'] ?? 'غير محدد',
+                        Colors.grey,
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                ],
+              );
+            }).toList(),
             const Divider(color: Colors.grey),
             const SizedBox(height: 32),
             _buildCommentSection(),

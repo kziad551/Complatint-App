@@ -59,7 +59,7 @@ class _ComplaintFormCatState extends State<ComplaintFormCat> {
       'Icons.star': Icons.star,
       'Icons.water_damage': Icons.water_damage,
     };
-    return iconsMap[iconName] ?? Icons.help; // Default to help if no match
+    return iconsMap[iconName] ?? Icons.help;
   }
 
   @override
@@ -113,7 +113,6 @@ class _ComplaintFormCatState extends State<ComplaintFormCat> {
                     itemBuilder: (context, index) {
                       final subCategory = subCategories[index];
                       final iconString = subCategory['icon'];
-                      print('Fetched icon: $iconString'); // Debugging
                       return CustomComplaintBox(
                         title: subCategory['name'],
                         icon: _mapStringToIcon(iconString),
@@ -123,19 +122,18 @@ class _ComplaintFormCatState extends State<ComplaintFormCat> {
                           setState(() {
                             selectedSubCategoryId = subCategory['id'];
                           });
-                
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => AddComplaintForm(
-                              subCategory: selectedSubCategoryId.toString(),
-                              complaintType: widget.complaintType,
-                              selectedCategory: widget.selectedCategory,
-                              serviceType: widget.serviceType,
-                              title: widget.selectedTitle,
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => AddComplaintForm(
+                                subCategory: selectedSubCategoryId.toString(),
+                                complaintType: widget.complaintType,
+                                selectedCategory: widget.selectedCategory,
+                                serviceType: widget.serviceType,
+                                title: widget.selectedTitle,
+                              ),
                             ),
-                          ),
-                        );
+                          );
                         },
                       );
                     },

@@ -131,7 +131,7 @@ class _ComplaintFormState extends State<ComplaintForm> {
                               builder: (context) => ComplaintFormCat(
                                 complaintType: selectedComplaint ?? '',
                                 selectedCategory: selectedCategory,
-                                serviceType: selectedCategory,
+                                serviceType: selectedCategory, // Pass to the next page
                                 selectedTitle: selectedComplaint ?? '',
                               ),
                             ),
