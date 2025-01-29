@@ -176,7 +176,7 @@ class _ComplaintListDetailsState extends State<ComplaintListDetails> {
             const SizedBox(height: 12),
             _buildReadOnlyInput('الوصف', description),
             const SizedBox(height: 12),
-            _buildReadOnlyInput('الفئة', subCategoryName),
+            _buildReadOnlyInput('الفئة', widget.status),
             const SizedBox(height: 12),
             _buildReadOnlyInput('التاريخ', date),
             const SizedBox(height: 12),
@@ -192,7 +192,7 @@ class _ComplaintListDetailsState extends State<ComplaintListDetails> {
               _buildTimelineSection(),
             const Divider(color: Colors.grey),
             const SizedBox(height: 32),
-            _buildCommentSection(),
+            // _buildCommentSection(),
           ],
         ),
       ),
@@ -244,43 +244,43 @@ class _ComplaintListDetailsState extends State<ComplaintListDetails> {
     );
   }
 
-  Widget _buildCommentSection() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text(
-          'أضف تعليق',
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-        ),
-        const SizedBox(height: 8),
-        TextFormField(
-          maxLines: 4,
-          decoration: InputDecoration(
-            hintText: 'اكتب تعليقك هنا',
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-            ),
-          ),
-        ),
-        const SizedBox(height: 20),
-        // const Text(
-        //   'أعطي تقييم للشكاوي',
-        //   style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-        // ),
-        // const SizedBox(height: 8),
-        // Row(
-        //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        //   children: List.generate(5, (index) {
-        //     return const Icon(
-        //       Icons.star_border,
-        //       size: 40,
-        //       color: Color(0xFFFFCD03),
-        //     );
-        //   }),
-        // ),
-      ],
-    );
-  }
+  // Widget _buildCommentSection() {
+  //   return Column(
+  //     crossAxisAlignment: CrossAxisAlignment.start,
+  //     children: [
+  //       const Text(
+  //         'أضف تعليق',
+  //         style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+  //       ),
+  //       const SizedBox(height: 8),
+  //       TextFormField(
+  //         maxLines: 4,
+  //         decoration: InputDecoration(
+  //           hintText: 'اكتب تعليقك هنا',
+  //           border: OutlineInputBorder(
+  //             borderRadius: BorderRadius.circular(8),
+  //           ),
+  //         ),
+  //       ),
+  //       const SizedBox(height: 20),
+  //       // const Text(
+  //       //   'أعطي تقييم للشكاوي',
+  //       //   style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+  //       // ),
+  //       // const SizedBox(height: 8),
+  //       // Row(
+  //       //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //       //   children: List.generate(5, (index) {
+  //       //     return const Icon(
+  //       //       Icons.star_border,
+  //       //       size: 40,
+  //       //       color: Color(0xFFFFCD03),
+  //       //     );
+  //       //   }),
+  //       // ),
+  //     ],
+  //   );
+  // }
 
   Widget _buildTimelineSection() {
     if (timeline.isEmpty) {

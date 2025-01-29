@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../widgets/toggle_tabs.dart';
 import '../widgets/login_form.dart';
 import '../widgets/sign_up_form.dart';
-import '../screens/reset_password_page.dart';
+import '../screens/reset_password.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -51,7 +51,7 @@ class _LoginPageState extends State<LoginPage> {
                                       context,
                                       MaterialPageRoute(
                                         builder: (context) =>
-                                            const ResetPasswordPage(),
+                                            const ResetPassword(),
                                       ),
                                     );
                                   },
