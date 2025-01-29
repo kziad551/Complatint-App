@@ -24,18 +24,17 @@ class _ComplaintListDetailsState extends State<ComplaintListDetails> {
   String description = '';
   String subCategoryName = '';
   String date = '';
-  List<Map<String, String>> timeline = []; // Store all status history
-  bool isLoading = true;
+  List<Map<String, dynamic>> timeline = [];  bool isLoading = false;
 
   @override
   void initState() {
     super.initState();
-    fetchAndBuildTimeline();
+    fetchComplaintDetails();
+    fetchTimeline();
   }
 
-  Future<void> fetchAndBuildTimeline() async {
+  Future<void> fetchComplaintDetails() async {
     try {
-      // Fetch data from API
       final response = await http.get(
         Uri.parse('https://complaint.top-wp.com/items/Complaint/${widget.complaintId}'),
       );
@@ -45,27 +44,14 @@ class _ComplaintListDetailsState extends State<ComplaintListDetails> {
 
         // Extract current values
         final currentStatus = data['status_subcategory']?.toString() ?? 'غير محدد';
-        final currentDate = data['statusDate1'] ?? '';
+        final currentDate = data['date'] ?? '';
 
-        // Check if the timeline needs to be updated
-        if (timeline.isEmpty ||
-            timeline.last['status'] != currentStatus ||
-            timeline.last['date'] != currentDate) {
-          setState(() {
-            timeline.add({
-              'status': currentStatus,
-              'date': formatDate(currentDate),
-            });
-          });
-        }
-
-        // Update other complaint details
+        // Update complaint details
         setState(() {
           complaintTitle = data['title'] ?? 'عنوان غير محدد';
           description = data['description'] ?? 'لا يوجد وصف';
           subCategoryName = currentStatus;
-          date = currentDate.isNotEmpty ? formatDate(currentDate) : 'غير محدد';
-          isLoading = false;
+          date = currentDate.isNotEmpty ? _parseDate(currentDate) : 'غير محدد';
         });
       } else {
         throw Exception('Failed to load complaint details');
@@ -78,10 +64,82 @@ class _ComplaintListDetailsState extends State<ComplaintListDetails> {
     }
   }
 
-  String formatDate(String rawDate) {
-    if (rawDate.isEmpty) return 'غير محدد';
-    final parsedDate = DateTime.parse(rawDate);
-    return "${parsedDate.year}-${parsedDate.month.toString().padLeft(2, '0')}-${parsedDate.day.toString().padLeft(2, '0')}";
+  Future<void> fetchTimeline() async {
+    try {
+      // Fetch Status Subcategories first
+      final subcatResponse = await http.get(
+        Uri.parse('https://complaint.top-wp.com/items/Status_subcategory'),
+      );
+
+      print('Subcategory API Status: ${subcatResponse.statusCode}');
+      print('Subcategory API Response: ${subcatResponse.body}');
+
+      final Map<String, String> subcatMap = {};
+
+      if (subcatResponse.statusCode == 200) {
+        final subcatJson = jsonDecode(subcatResponse.body);
+        final List<dynamic> subcatItems = subcatJson['data'] ?? [];
+
+        for (final subcat in subcatItems) {
+          final id = subcat['id']?.toString();
+          final name = subcat['name']?.toString() ?? 'Unknown Status';
+          if (id != null) {
+            subcatMap[id] = name;
+          }
+        }
+      }
+
+      // Now fetch the timeline data
+      final response = await http.get(
+        Uri.parse(
+          'https://complaint.top-wp.com/items/ComplaintTimeline?filter[complaint_id]=${widget.complaintId}',
+        ),
+      );
+
+      print('Timeline API Status: ${response.statusCode}');
+      print('Timeline API Response: ${response.body}');
+
+      if (response.statusCode == 200) {
+        final jsonData = jsonDecode(response.body);
+        final List<dynamic> items = jsonData['data'] ?? [];
+
+        final List<Map<String, dynamic>> parsedTimeline = items.map((item) {
+          final statusId = item['status_subcategory']?.toString();
+          String statusName;
+
+          // Use subcategory name if available, otherwise fallback to ID or 'Unknown Status'
+          if (subcatMap.isNotEmpty && statusId != null) {
+            statusName = subcatMap[statusId] ?? 'Unknown Status';
+          } else {
+            statusName = statusId ?? 'Unknown Status';
+          }
+
+          return {
+            'status_subcategory': statusName,
+            'statusDate': _parseDate(item['statusDate']),
+          };
+        }).toList();
+
+        setState(() {
+          timeline = parsedTimeline.reversed.toList(); // Show newest first
+          isLoading = false;
+        });
+      }
+    } catch (e) {
+      print("Timeline Error: $e");
+      setState(() => isLoading = false);
+    }
+  }
+    
+  String _parseDate(dynamic date) {
+    if (date == null) return 'Unknown Date';
+    try {
+      final parsed = DateTime.parse(date.toString());
+      return "${parsed.year}-${parsed.month.toString().padLeft(2, '0')}-${parsed.day.toString().padLeft(2, '0')}";
+    } catch (e) {
+      print("Date Parse Error: $e");
+      return 'Invalid Date';
+    }
   }
 
   @override
@@ -128,29 +186,10 @@ class _ComplaintListDetailsState extends State<ComplaintListDetails> {
             const SizedBox(height: 32),
             const Text(
               'الخط الزمني',
-              style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),
-            ...timeline.map((entry) {
-              return Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        entry['date'] ?? '',
-                        style: const TextStyle(fontSize: 16, color: Colors.black),
-                      ),
-                      _buildStatusButton(
-                        entry['status'] ?? 'غير محدد',
-                        Colors.grey,
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 16),
-                ],
-              );
-            }).toList(),
+              _buildTimelineSection(),
             const Divider(color: Colors.grey),
             const SizedBox(height: 32),
             _buildCommentSection(),
@@ -166,7 +205,7 @@ class _ComplaintListDetailsState extends State<ComplaintListDetails> {
       children: [
         Text(
           title,
-          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 6),
         Container(
@@ -187,7 +226,7 @@ class _ComplaintListDetailsState extends State<ComplaintListDetails> {
 
   Widget _buildStatusButton(String status, Color color) {
     return Container(
-      width: 150,
+      width: double.infinity,
       padding: const EdgeInsets.symmetric(vertical: 4),
       decoration: BoxDecoration(
         color: color,
@@ -224,22 +263,78 @@ class _ComplaintListDetailsState extends State<ComplaintListDetails> {
           ),
         ),
         const SizedBox(height: 20),
-        const Text(
-          'أعطي تقييم للشكاوي',
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-        ),
-        const SizedBox(height: 8),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: List.generate(5, (index) {
-            return const Icon(
-              Icons.star_border,
-              size: 40,
-              color: Color(0xFFFFCD03),
-            );
-          }),
-        ),
+        // const Text(
+        //   'أعطي تقييم للشكاوي',
+        //   style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+        // ),
+        // const SizedBox(height: 8),
+        // Row(
+        //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        //   children: List.generate(5, (index) {
+        //     return const Icon(
+        //       Icons.star_border,
+        //       size: 40,
+        //       color: Color(0xFFFFCD03),
+        //     );
+        //   }),
+        // ),
       ],
     );
   }
+
+  Widget _buildTimelineSection() {
+    if (timeline.isEmpty) {
+      return const Text(
+        'لا توجد بيانات في الخط الزمني حاليًا.',
+        style: TextStyle(fontSize: 16, color: Colors.grey),
+      );
+    }
+
+    return ListView.builder(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      itemCount: timeline.length,
+      itemBuilder: (context, index) {
+        final item = timeline[index];
+        return Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                item['statusDate'] ?? 'غير محدد',
+                style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.black87,
+                ),
+              ),
+
+              const SizedBox(width: 8),
+
+              Expanded(
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
+                  decoration: BoxDecoration(
+                    color: Colors.green.withOpacity(0.15),
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                  child: Text(
+                    item['status_subcategory'] ?? 'غير محدد',
+                    style: const TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.green,
+                    ),
+                    textAlign: TextAlign.right,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
 }
