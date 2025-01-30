@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../widgets/custom_action_button.dart';
 import '../widgets/custom_input_field.dart';
 import '../widgets/custom_layout_page.dart';
+import '../screens/login_page.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({Key? key}) : super(key: key);
@@ -68,7 +69,18 @@ class _SettingsPageState extends State<SettingsPage> {
       print('Error fetching user data: $e');
     }
   }
+ 
+    Future<void> handleLogout(BuildContext context) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('isLoggedIn', false); // Clear login status
 
+    // Navigate to Login Page
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(builder: (context) => const LoginPage()),
+      (route) => false,
+    );
+  }
   @override
   Widget build(BuildContext context) {
     return Directionality(
@@ -195,47 +207,56 @@ Widget _extraPagesSection() {
     {'icon': Icons.rate_review, 'title': "التقييمات والملاحظات"},
     {'icon': Icons.privacy_tip, 'title': "إعدادات الخصوصية"},
     {'icon': Icons.help, 'title': "المساعدة والدعم"},
+    {'icon': Icons.logout, 'title': "تسجيل الخروج"},
   ];
 
   return Container(
-    decoration: BoxDecoration(
-      color: Colors.white, // White background
-      borderRadius: BorderRadius.circular(12),
-      boxShadow: [
-        BoxShadow(
-          color: Colors.grey.withOpacity(0.2),
-          blurRadius: 8,
-          offset: const Offset(0, 2),
-        ),
-      ],
-    ),
-    child: Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: ListView.builder(
-        shrinkWrap: true,
-        physics: const NeverScrollableScrollPhysics(),
-        itemCount: sections.length,
-        itemBuilder: (context, index) {
-          final section = sections[index];
-          return Card(
-            elevation: 0, // Flat card within the white container
-            margin: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
-            child: ListTile(
-              leading: Icon(section['icon'] as IconData, color: const Color(0xFFBA110C)),
-              title: Text(section['title'] as String),
-              trailing: const Icon(Icons.arrow_forward_ios, size: 16, color: Colors.grey),
-              onTap: () {
-                // Handle navigation or action for each item
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('${section['title']} تم الضغط على')),
+      decoration: BoxDecoration(
+        color: Colors.white, // White background
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.2),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          children: [
+            ListView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: sections.length,
+              itemBuilder: (context, index) {
+                final section = sections[index];
+                return Card(
+                  elevation: 0, // Flat card within the white container
+                  margin: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
+                  child: ListTile(
+                    leading: Icon(section['icon'] as IconData, color: const Color(0xFFBA110C)),
+                    title: Text(section['title'] as String),
+                    trailing: const Icon(Icons.arrow_forward_ios, size: 16, color: Colors.grey),
+                    onTap: () {
+                      if (section['title'] == 'تسجيل الخروج') {
+                        handleLogout(context); // Handle logout action
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text('${section['title']} تم الضغط على')),
+                        );
+                      }
+                    },
+                  ),
                 );
               },
             ),
-          );
-        },
+            const Divider(color: Colors.grey), // Divider for better UI
+          ],
+        ),
       ),
-    ),
-  );
-}
+    );
+  }
+  }
 
-}

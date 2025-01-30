@@ -1,113 +1,137 @@
 import 'package:flutter/material.dart';
-import 'menu_widget.dart'; // Import the MenuWidget for the swipe-up menu
+import 'package:shared_preferences/shared_preferences.dart';
+import '../screens/home_page.dart';
+import '../screens/complaint_form.dart';
+import '../screens/complaint_list.dart';
+import '../screens/settings.dart';
+import '../screens/complaint_rating.dart';
+import '../screens/login_page.dart';
 
-class FooterWidget extends StatelessWidget {
-  final String currentPage; // Add currentPage parameter to track active page
+void main() {
+  runApp(const MyApp());
+}
 
-  const FooterWidget({super.key, required this.currentPage});
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: const BoxDecoration(
-        image: DecorationImage(
-          image: AssetImage('assets/images/footer_waves.png'),
-          fit: BoxFit.cover,
-          alignment: Alignment.center,
-        ),
-        color: Color(0xFFBC0019),
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'Complaint App',
+      theme: ThemeData(
+        primarySwatch: Colors.red,
       ),
-      height: 86, // Adjust height as needed
-      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          // Left Section with Logo
-          Expanded(
-            flex: 1, // Allocate 1/3 of the space
-            child: Container(
-              alignment: Alignment.center,
-              // child: Image.asset(
-              //   'assets/images/app_logo.png',
-              // ),
-            ),
-          ),
-
-          // Middle Section with Button
-          Expanded(
-            flex: 1, // Allocate 1/3 of the space
-            child: Container(
-              alignment: Alignment.center,
-              child: ElevatedButton(
-                onPressed: () {
-                  // Show swipe-up menu
-                  showModalBottomSheet(
-                    context: context,
-                    shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.vertical(
-                        top: Radius.circular(20),
-                      ),
-                    ),
-                    builder: (BuildContext context) {
-                      return MenuWidget(currentPage: currentPage);
-                    },
-                  );
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFFD4D6D9),
-                  foregroundColor: Colors.black,
-                  padding: const EdgeInsets.symmetric(horizontal: 32),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  shadowColor: Colors.black,
-                ),
-                child: const Text(
-                  'القائمة',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-            ),
-          ),
-
-          // Right Section with Logo
-          Expanded(
-            flex: 1, // Allocate 1/3 of the space
-            child: Container(
-              alignment: Alignment.center,
-              child: const Text(
-                "",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 32,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              // child: Image.asset(
-              //   'assets/images/giz_logo.jpeg',
-              // ),
-            ),
-          ),
-        ],
-      ),
-
-      // Stack(
-      //   children: [
-      //     // Background Image
-      //     Positioned.fill(
-      //       child: Image.asset(
-      //         "assets/images/footer_waves.png",
-      //         fit: BoxFit.fitWidth,
-      //         width: double.infinity,
-      //         // height: 60,
-      //       ),
-      //     ),
-      //     // Row of Elements on Top of the Image
-      //   ],
-      // ),
+      home: const HomePage(),
     );
+  }
+}
+
+class FooterWidget extends StatelessWidget {
+  final String currentPage;
+
+  const FooterWidget({super.key, required this.currentPage});
+
+  Future<void> _handleLogout(BuildContext context) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('isLoggedIn', false);
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(builder: (_) => const LoginPage()),
+      (route) => false,
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Directionality( // Ensure consistent text direction
+      textDirection: TextDirection.ltr, // Change to rtl if needed
+      child: BottomAppBar(
+        shape: const CircularNotchedRectangle(),
+        notchMargin: 8,
+        color: Colors.white,
+        elevation: 8,
+        child: Container(
+          height: 65,
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              _buildNavIcon(
+                context,
+                icon: Icons.home,
+                isActive: currentPage == 'home_page',
+                onTap: () => _navigateTo(context, const HomePage(), 'home_page'),
+              ),
+              _buildNavIcon(
+                context,
+                icon: Icons.list_alt,
+                isActive: currentPage == 'complaint_list',
+                onTap: () => _navigateTo(context, const ComplaintList(), 'complaint_list'),
+              ),
+              SizedBox(
+                width: 60,
+                height: 60,
+                child: FloatingActionButton(
+                  backgroundColor: const Color(0xFFBC0019),
+                  shape: const CircleBorder(),
+                  elevation: 5,
+                  onPressed: () => _navigateTo(context, const ComplaintForm(), 'add_complaint'),
+                  child: const Icon(Icons.add, color: Colors.white, size: 32),
+                ),
+              ),
+              _buildNavIcon(
+                context,
+                icon: Icons.star,
+                isActive: currentPage == 'rate_service',
+                onTap: () async {
+                  final userId = await _getUserId();
+                  if (userId != null) {
+                    _navigateTo(context, ComplaintRatingPage(userId: userId), 'rate_service');
+                  }
+                },
+              ),
+              _buildNavIcon(
+                context,
+                icon: Icons.settings,
+                isActive: currentPage == 'settings',
+                onTap: () => _navigateTo(context, const SettingsPage(), 'settings'),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildNavIcon(BuildContext context, {
+    required IconData icon,
+    required bool isActive,
+    required Function() onTap,
+  }) {
+    return IconButton(
+      icon: Icon(icon, color: isActive ? const Color(0xFFBC0019) : Colors.grey),
+      iconSize: 28,
+      onPressed: onTap,
+    );
+  }
+
+  Future<int?> _getUserId() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getInt('userId');
+  }
+
+  void _navigateTo(BuildContext context, Widget page, String pageName) {
+    if (currentPage != pageName) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => Directionality( // Ensure Directionality on all pages
+            textDirection: TextDirection.ltr, // Change to rtl if needed
+            child: page,
+          ),
+        ),
+      );
+    }
   }
 }
